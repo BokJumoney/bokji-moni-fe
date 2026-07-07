@@ -1,0 +1,38 @@
+
+@font-face {
+    font-family: 'GMarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: 500;
+    font-display: swap;
+}
+/* 로그인 로고 위치 */
+.logo-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+/* 로그인 로고 이미지 */
+.logo-img img {
+    width: 500px; 
+    height: auto;
+}
+/* 로고 밑 문구 컨테이너 */
+.logo-title{
+    width:400px;
+}
+/* 로그인 로고 제목 */
+.main-title{
+    font-size: 30px;
+    font-weight: 1000;
+    font-family: 'GMarketSans';
+    color: #5f993b
+
+}
+/* 로그인 로고 서브 제목 */
+.sub-title{
+    font-size: 20px;
+    color: rgb(102, 102, 102);
+}

@@ -1,0 +1,31 @@
+
+body {
+  margin: 0;
+}
+
+/* 로그인 컨테이너 */
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+/* 로고 섹션 */
+.brand-section {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #daf8c736;
+}
+
+/* 로그인 섹션 */
+.login-section {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  width: 350px;
+}
