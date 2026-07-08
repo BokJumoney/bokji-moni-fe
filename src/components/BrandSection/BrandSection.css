@@ -16,7 +16,7 @@
 }
 /* 로그인 로고 이미지 */
 .logo-img img {
-    width: 500px; 
+    width: 300px; 
     height: auto;
 }
 /* 로고 밑 문구 컨테이너 */
@@ -31,8 +31,11 @@
     color: #5f993b
 
 }
+.main-title img{
+ width:200px;
+}
 /* 로그인 로고 서브 제목 */
 .sub-title{
-    font-size: 20px;
+    font-size: 15px;
     color: rgb(102, 102, 102);
 }

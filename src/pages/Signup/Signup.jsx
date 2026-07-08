@@ -1,9 +1,6 @@
 import BrandSection from "../../components/BrandSection/BrandSection";
-import LoginForm from "./LoginForm";
-import "./Login.css";
 
-
-const Login= ()=>{
+const Signup= ()=>{
     return (
         <div className="login-container">
             <div className="brand-section">
@@ -11,10 +8,10 @@ const Login= ()=>{
             </div>
           
             <div className="login-section">
-                <LoginForm/>
+                회원가입
             </div>
         </div>
     )
 }
 
-export default Login;
+export default Signup;
