@@ -1,3 +1,4 @@
+import './Header.css'
 import logo from "../../assets/logo.png";
 
 export default function Header() {
@@ -11,10 +12,8 @@ export default function Header() {
 
                 {/* 네비게이션 */}
                 <nav className="header__nav">
-                    <a href="#" className="header__nav-link header__nav-link--active">홈</a>
-                    <a href="#" className="header__nav-link">서비스 소개</a>
-                    <a href="#" className="header__nav-link">복지 가이드</a>
-                    <a href="#" className="header__nav-link">마이페이지</a>
+                    <a href="/" className="header__nav-link header__nav-link--active">홈</a>
+                    <a href="/introduce" className="header__nav-link">서비스 소개</a>
                 </nav>
 
                 {/* 로그인 버튼 */}
