@@ -1,32 +1,14 @@
 import './MainPage.css'
+import Header from '../../components/common/Header'
 import mascotImg from '../../assets/moni_logo_login.png'
 import bgImg from '../../assets/background.png'
-import logo from '../../assets/logo.png'
 
 function MainPage() {
   return (
     <div className="main-page" style={{ backgroundImage: `url(${bgImg})` }}>
 
       {/* ── Header / Navigation ── */}
-      <header className="header">
-        <div className="header__inner">
-          {/* 로고 */}
-          <a href="/" className="header__logo">
-            <img src={logo} className="header__logo-img" alt="logo" />
-          </a>
-
-          {/* 네비게이션 */}
-          <nav className="header__nav">
-            <a href="#" className="header__nav-link header__nav-link--active">홈</a>
-            <a href="#" className="header__nav-link">서비스 소개</a>
-            <a href="#" className="header__nav-link">복지 가이드</a>
-            <a href="#" className="header__nav-link">마이페이지</a>
-          </nav>
-
-          {/* 로그인 버튼 */}
-          <button className="header__login-btn">로그인</button>
-        </div>
-      </header>
+      <Header />
 
       {/* ── Hero Section ── */}
       <section className="hero">
