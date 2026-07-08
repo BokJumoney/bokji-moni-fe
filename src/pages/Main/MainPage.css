@@ -114,12 +114,14 @@
 .hero__inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 48px;
   width: 100%;
   display: flex;
+  border-radius: 10px;
   justify-content: space-between;
   align-items: center;
   gap: 40px;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 /* 좌측 컨텐츠 */
