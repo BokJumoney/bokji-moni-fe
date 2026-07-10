@@ -1,9 +1,21 @@
+import { useState } from "react";
 import { getFileMeta } from "../../../utils/fileutils";
 
-const UploadFileList = ({uploadedFiles, setUploadedFiles}) => {
+const UploadFileList = ({uploadedFiles, onDeleteFile}) => {
+    const [deletingFileId, setDeletingFileId] = useState("");
+    const [deleteError, setDeleteError] = useState("");
 
-    const handleDelete = (fileId) => {
-        setUploadedFiles((currentFiles) => currentFiles.filter((file) => file.id !== fileId));
+    const handleDelete = async (fileId) => {
+        setDeletingFileId(fileId);
+        setDeleteError("");
+
+        try {
+            await onDeleteFile(fileId);
+        } catch (error) {
+            setDeleteError(error.message);
+        } finally {
+            setDeletingFileId("");
+        }
     };
 
     return (
@@ -12,6 +24,7 @@ const UploadFileList = ({uploadedFiles, setUploadedFiles}) => {
               <div>
                 <h2>업로드 파일 목록</h2>
                 <p>총 {uploadedFiles.length}개의 파일이 등록되어 있습니다.</p>
+                {deleteError && <p className="upload-error">{deleteError}</p>}
               </div>
             </div>
 
@@ -46,8 +59,8 @@ const UploadFileList = ({uploadedFiles, setUploadedFiles}) => {
                           <span className="status-badge">{file.status}</span>
                         </td>
                         <td>
-                          <button className="delete-btn" type="button" onClick={() => handleDelete(file.id)}>
-                            삭제
+                          <button className="delete-btn" type="button" disabled={deletingFileId === file.id} onClick={() => handleDelete(file.id)}>
+                            {deletingFileId === file.id ? "삭제 중..." : "삭제"}
                           </button>
                         </td>
                       </tr>
