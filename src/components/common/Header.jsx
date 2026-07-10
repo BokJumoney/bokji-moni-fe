@@ -17,7 +17,7 @@ export default function Header() {
                 </nav>
 
                 {/* 로그인 버튼 */}
-                <button className="header__login-btn">로그인</button>
+                <button type="button" onClick="location.href='/login'" className="header__login-btn">로그인</button>
             </div>
         </header>
     )
