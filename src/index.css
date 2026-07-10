@@ -36,17 +36,19 @@ html {
 }
 
 @font-face {
-    font-family: 'GMarketSans';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-    font-weight: 500;
-    font-display: swap;
-body {
-  margin: 0;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
-    Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo',
-    'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  color: var(--text-dark);
-  background: var(--bg-white);
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+
+  body {
+    margin: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
+      Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo',
+      'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    color: var(--text-dark);
+    background: var(--bg-white);
+  }
 }
 
 #root {
@@ -71,7 +73,14 @@ select {
 
 * {
   box-sizing: border-box;
-h1, h2, h3, h4, h5, h6 {
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   font-weight: 700;
 }
@@ -89,6 +98,8 @@ body,
 #root {
   width: 100%;
   height: 100%;
+}
+
 button {
   cursor: pointer;
   font-family: inherit;

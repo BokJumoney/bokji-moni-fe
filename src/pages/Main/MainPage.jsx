@@ -1,9 +1,37 @@
+import { useState } from 'react'
 import './MainPage.css'
 import Header from '../../components/common/Header'
 import mascotImg from '../../assets/moni_logo_login.png'
 import bgImg from '../../assets/background.png'
+import { useNavigate } from 'react-router-dom'
+import { postChatRequest } from '../../services/chat/chatSendMessage'
 
 function MainPage() {
+  const navigate = useNavigate()
+  const [inputValue, setInputValue] = useState('')
+
+  const handleSearch = async () => {
+    if (!inputValue.trim()) {
+      navigate('/chat')
+      return
+    }
+
+    try {
+      await postChatRequest(inputValue)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      navigate('/chat')
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+
   return (
     <div className="main-page" style={{ backgroundImage: `url(${bgImg})` }}>
 
@@ -34,8 +62,11 @@ function MainPage() {
                 type="text"
                 className="hero__search-input"
                 placeholder="궁금한 복지 내용을 입력해주세요"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
-              <button className="hero__search-btn" type="button">
+              <button className="hero__search-btn" type="button" onClick={handleSearch}>
                 <svg className="hero__search-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
