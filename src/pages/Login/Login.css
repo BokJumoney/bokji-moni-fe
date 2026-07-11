@@ -11,9 +11,12 @@ p{
 
 /* 로그인 컨테이너 */
 .login-container {
-  width: 100vw;
+  width: 70vw;
   height: 100vh;
   display: flex;
+  margin-left: 300px;
+  margin-right: 300px;
+  background-color: white;
 }
 /* 로고 섹션 */
 .brand-section {
@@ -35,6 +38,9 @@ p{
 .login-form {
   width: 350px;
   height: 80vh;
+  position: relative;
+  top: 105px;
+  
 }
 /* 설명 */
 .subscript {
@@ -52,7 +58,7 @@ p{
 }
 /* 하단 설명 컨테이너 */
 .subscript2-wrap{
-    width: 57%;
+    width: 66%;
     margin: 0 auto;
     margin-top: 20px;
 }

@@ -1,5 +1,4 @@
 import React from 'react'
-import moniLogo from "../../assets/moni_logo.png"
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { Link } from "react-router-dom";
@@ -8,7 +7,7 @@ export default function LoginForm(){
     return(
             <div className="login-form">
               <h1>로그인</h1>
-              <p className="subscript">회원 계정을로 로그인하세요.</p>
+              <p className="subscript">회원 계정으로 로그인하세요.</p>
               <p className="input-title">이메일</p>
               <Input placeholder={"이메일을 입력해주세요"}></Input>
 
