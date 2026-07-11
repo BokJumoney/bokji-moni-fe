@@ -1,0 +1,46 @@
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-field {
+  width: 100%;
+  height: 52px;
+  padding: 0 48px 0 16px; /* 오른쪽에 아이콘 공간 확보 */
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.input-field:focus {
+  border-color: #4f7cff;
+}
+
+/* 비밀번호 미리보기 */
+.eye-btn {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #888;
+  padding: 0;
+}
+
+/* 비밀번호 미리보기 커서 올렸을 때 */
+.eye-btn:hover {
+  color: #555;
+}
