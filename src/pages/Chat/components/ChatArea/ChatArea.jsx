@@ -1,18 +1,18 @@
 import './ChatArea.css';
 import ChatHeader from '../ChatHeader/ChatHeader';
 import MessageList from '../MessageList/MessageList';
-import QuickStart from '../QuickStart/QuickStart';
 import ChatInput from '../ChatInput/ChatInput';
 
-function ChatArea() {
+function ChatArea({ messages, isLoading, onSend, onReset }) {
   return (
     <main className="chat-area">
-      <ChatHeader />
+      <ChatHeader onReset={onReset} isLoading={isLoading} />
       <div className="chat-content">
-        <MessageList />
-        <QuickStart />
+        {
+          <MessageList messages={messages} isLoading={isLoading} />
+        }
       </div>
-      <ChatInput />
+      <ChatInput onSend={onSend} isLoading={isLoading} />
     </main>
   );
 }

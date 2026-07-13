@@ -1,25 +1,50 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
+import WelfareCard from '../../../../components/welfare/WelfareCard';
+import { formatTime } from '../../../../utils/messageUtils';
 import './MessageList.css';
 
-function MessageList() {
+function MessageList({ messages, isLoading }) {
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
   return (
     <div className="message-list">
-      {/* User Message */}
-      <div className="message-row user-row">
-        <div className="message user-message">
-          <p>월 200만원 벌고 있는 27살 청년이고,<br/>현재 취업을 준비 중입니다.</p>
-          <span className="message-time">오후 2:30</span>
+      {messages.map((msg) => (
+        <div key={msg.id} className={`message-row ${msg.role === 'user' ? 'user-row' : 'bot-row'}`}>
+          {msg.role === 'assistant' && (
+            <div className="message-avatar">🤖</div>
+          )}
+          <div className={`message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`}>
+            <p>{msg.content}</p>
+            {msg.sources && msg.sources.length > 0 && (
+              <div className="message-sources">
+                {msg.sources.map((src, i) => (
+                  <WelfareCard key={i} title={src.title} description={src.description} />
+                ))}
+              </div>
+            )}
+            <span className="message-time">{formatTime(msg.timestamp)}</span>
+          </div>
         </div>
-      </div>
+      ))}
 
-      {/* Bot Message */}
-      <div className="message-row bot-row">
-        <div className="message-avatar">🤖</div>
-        <div className="message bot-message">
-          <p>입력해주셔서 감사합니다! 😊<br/>더 정확한 추천을 위해 몇 가지 추가 정보를<br/>알려주시면 좋아요.</p>
-          <span className="message-time">오후 2:30</span>
+      {isLoading && (
+        <div className="message-row bot-row">
+          <div className="message-avatar">🤖</div>
+          <div className="message bot-message">
+            <div className="typing-indicator">
+              <span className="typing-dot" />
+              <span className="typing-dot" />
+              <span className="typing-dot" />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      <div ref={bottomRef} />
     </div>
   );
 }
