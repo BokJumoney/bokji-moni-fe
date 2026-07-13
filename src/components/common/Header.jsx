@@ -17,12 +17,6 @@ export default function Header() {
                     <img src={logo} className="header__logo-img" alt="logo" />
                 </a>
 
-                {/* 네비게이션 */}
-                <nav className="header__nav">
-                    <a href="/" className="header__nav-link header__nav-link--active">홈</a>
-                    <a href="/introduce" className="header__nav-link">서비스 소개</a>
-                </nav>
-
                 {/* 로그인 버튼 */}
                 <button type="button" onClick={goToLogin} className="header__login-btn">로그인</button>
             </div>

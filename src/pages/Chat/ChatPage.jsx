@@ -1,19 +1,21 @@
 import './ChatPage.css';
+import useChat from '../../hooks/useChat';
 import ChatArea from './components/ChatArea/ChatArea';
-import Header from "../../components/common/Header.jsx";
 
 function ChatPage() {
-    return (
-        <>
-            {/* ── Header / Navigation ── */}
-            <Header />
+    const { messages, isLoading, sendMessage, resetChat } = useChat();
 
-            {/* - Chat - */}
-            <div className="chat-page-container">
-                <ChatArea />
-            </div>
-        </>
-    )
+    return (
+        <div className="chat-page-container">
+            <ChatArea
+                messages={messages}
+                isLoading={isLoading}
+                onSend={sendMessage}
+                onReset={resetChat}
+                onQuickStart={sendMessage}
+            />
+        </div>
+    );
 }
 
 export default ChatPage;

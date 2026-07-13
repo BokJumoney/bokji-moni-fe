@@ -14,3 +14,11 @@
   flex-direction: column;
   padding: 0 40px;
 }
+
+.chat-welcome {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 0;
+}

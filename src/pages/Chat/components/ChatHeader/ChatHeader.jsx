@@ -1,6 +1,6 @@
 import './ChatHeader.css';
 
-function ChatHeader() {
+function ChatHeader({ onReset, isLoading }) {
   return (
     <header className="chat-header">
       <div className="bot-info">
@@ -10,7 +10,11 @@ function ChatHeader() {
           <p className="bot-desc">AI가 복지 정보를 찾아드려요!</p>
         </div>
       </div>
-      <button className="reset-btn">
+      <button
+        className="reset-btn"
+        onClick={onReset}
+        disabled={isLoading}
+      >
         <span className="reset-icon">↻</span> 새로운 채팅
       </button>
     </header>
