@@ -4,7 +4,6 @@ import Header from '../../components/common/Header'
 import mascotImg from '../../assets/moni_logo_login.png'
 import bgImg from '../../assets/background.png'
 import { useNavigate } from 'react-router-dom'
-import { postChatRequest } from '../../services/chat/chatSendMessage'
 
 function MainPage() {
   const navigate = useNavigate()
