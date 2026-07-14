@@ -1,13 +1,3 @@
-/* ===========================
-   Global Reset & Base Styles
-   =========================== */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   --color-title-high: #568a35;
   --color-title-medium: #7cb153;
@@ -33,6 +23,18 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --color-title-high: #568a35;
+  --color-title-medium: #7cb153;
+  --color-title-low: #a6cf7a;
+  --color-body: #595959;
+
+  --boder-line: #e6edf0;
+  --gray-background: #f8fafb;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
 }
 
 @font-face {
@@ -62,6 +64,13 @@ html {
   flex-direction: column;
 }
 
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+
 html,
 body,
 button,
@@ -74,6 +83,7 @@ select {
 * {
   box-sizing: border-box;
 }
+
 
 h1,
 h2,
