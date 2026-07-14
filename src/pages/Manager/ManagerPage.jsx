@@ -3,27 +3,11 @@ import "./ManagerPage.css";
 import upload from "../../assets/upload.png";
 import UploadFileList from "./components/UploadFileList"
 import ManagerSidebar from "./components/ManagerSidebar";
+import { deleteAdminFile, uploadAdminFile } from "../../api/adminFiles.js";
 import { formatUploadedAt } from "../../utils/dateutils.js";
 import { formatFileSize, getExtension, getFileMeta } from "../../utils/fileutils.js";
 
-const initialFiles = [
-  {
-    id: "seed-1",
-    name: "2024_복지정책_종합안내.pdf",
-    type: "PDF",
-    size: "2.4MB",
-    uploadedAt: "2024.06.02 14:30",
-    status: "변환 완료",
-  },
-  {
-    id: "seed-2",
-    name: "청년지원정책_목록.csv",
-    type: "CSV",
-    size: "1.1MB",
-    uploadedAt: "2024.06.02 14:25",
-    status: "변환 완료",
-  },
-];
+const initialFiles = [];
 
 const ManagerPage = () => {
   const fileInputRef = useRef(null);
@@ -31,12 +15,15 @@ const ManagerPage = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState(initialFiles);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
 
   const hasSelectedFiles = selectedFiles.length > 0;
 
   const applySelectedFiles = (files) => {
-    const nextFiles = Array.from(files ?? []);
+    const nextFiles = Array.from(files ?? []).slice(0, 1);
     setSelectedFiles(nextFiles);
+    setUploadError("");
   };
 
   const handleDrop = (event) => {
@@ -67,26 +54,43 @@ const ManagerPage = () => {
     fileInputRef.current?.click();
   };
 
-  const handleUploadStart = () => {
+  const handleUploadStart = async () => {
     if (!hasSelectedFiles) return;
 
+    setIsUploading(true);
+    setUploadError("");
+
     const now = new Date();
-    const newRows = selectedFiles.map((file) => ({
-      id: `${file.name}-${file.lastModified}-${file.size}`,
-      name: file.name,
-      type: getExtension(file.name),
-      size: formatFileSize(file.size),
-      uploadedAt: formatUploadedAt(now),
-      status: "업로드 완료",
-    }));
+    const file = selectedFiles[0];
 
-    setUploadedFiles((currentFiles) => [...newRows, ...currentFiles]);
-    setSelectedFiles([]);
-    setIsModalOpen(true);
+    try {
+      const uploadedFile = await uploadAdminFile(file);
+      const newRow = {
+        id: uploadedFile.fileId,
+        name: uploadedFile.originalFilename,
+        type: getExtension(uploadedFile.originalFilename),
+        size: formatFileSize(uploadedFile.size),
+        uploadedAt: formatUploadedAt(now),
+        status: "업로드 완료",
+      };
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      setUploadedFiles((currentFiles) => [newRow, ...currentFiles]);
+      setSelectedFiles([]);
+      setIsModalOpen(true);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (error) {
+      setUploadError(error.message);
+    } finally {
+      setIsUploading(false);
     }
+  };
+
+  const handleDeleteFile = async (fileId) => {
+    await deleteAdminFile(fileId);
+    setUploadedFiles((currentFiles) => currentFiles.filter((file) => file.id !== fileId));
   };
 
   return (
@@ -156,11 +160,12 @@ const ManagerPage = () => {
                     type="file"
                     id="upload-input"
                     accept=".pdf,.csv,.xls,.xlsx,.hwp,.hwpx"
-                    multiple
                     hidden
                     onChange={handleInputChange}
                 />
                 </div>
+
+                {uploadError && <p className="upload-error">{uploadError}</p>}
 
                 <div className="upload-actions">
                 <button className="secondary-btn" type="button" onClick={handleUploadAreaClick}>
@@ -169,15 +174,15 @@ const ManagerPage = () => {
                 <button
                     className="upload-btn"
                     type="button"
-                    disabled={!hasSelectedFiles}
+                    disabled={!hasSelectedFiles || isUploading}
                     onClick={handleUploadStart}
                 >
-                    업로드 시작
+                    {isUploading ? "업로드 중..." : "업로드 시작"}
                 </button>
                 </div>
             </section>
           
-            <UploadFileList uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} />
+            <UploadFileList uploadedFiles={uploadedFiles} onDeleteFile={handleDeleteFile} />
         </main>
       </div>
 

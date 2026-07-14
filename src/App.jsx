@@ -1,22 +1,27 @@
 import { Routes, Route } from "react-router-dom";
+import "./App.css"
+
 import Login from "./pages/Login/Login";
-import Chat from "./pages/Chat/ChatPage";
-import Main from "./pages/Main/MainPage";
 import Signup from "./pages/Signup/Signup";
 import ManagerPage from "./pages/Manager/ManagerPage"
-import "./App.css"
+import ChatPage from "./pages/Chat/ChatPage";
+import MainPage from "./pages/Main/MainPage";
+import ChatLayout from "./layouts/ChatLayout.jsx";
 
 function App() {
 
   return (
     <>
-        <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/manager" element={<ManagerPage />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/manager" element={<ManagerPage />} />
+        <Route element={<ChatLayout />} >
+          <Route path="/" element={<MainPage />} />
+          <Route path="/chat/:chatRoomId" element={<ChatPage />} />
+        </Route>
+      </Routes >
     </>
   )
 }
