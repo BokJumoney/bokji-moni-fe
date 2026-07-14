@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
+import ManagerPage from "./pages/Manager/ManagerPage"
+import "./App.css"
 import Signup from "./pages/Signup/Signup";
-
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
     <>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/manager" element={<ManagerPage />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
     </>
