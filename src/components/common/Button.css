@@ -1,0 +1,23 @@
+
+/* 버튼 컨테이너 */
+.btn-container{
+    margin-top: 20px;
+}
+/* 버튼*/
+.btn {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  font-size: 16px;
+  color:#FFFFFF;
+  outline: none;
+  box-sizing: border-box;
+  background-color: #568a35;
+  font-weight: bold;
+}
+/* 버튼에 커서 올릴 때 */
+.btn:hover{
+      background-color: #c8eeb0;
+  font-weight: bolder;
+}
