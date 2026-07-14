@@ -1,0 +1,21 @@
+/* 로그인 컨테이너 */
+.signup-container {
+  width: 70vw;
+  height: 100vh;
+  display: flex;
+  margin-left: 300px;
+  margin-right: 300px;
+}
+
+/* 로그인 섹션 */
+.signup-section {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-form{
+  width: 350px;
+  height: 80vh;
+}
