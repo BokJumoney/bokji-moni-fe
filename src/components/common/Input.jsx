@@ -1,5 +1,4 @@
-import React from 'react';
-import maintitle from "../../assets/title.png"
+// import maintitle from "../../assets/title.png"
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Input.css";
@@ -14,6 +13,8 @@ export default function Input({type="text", placeholder, value, onChange}){
                 className={"input-field"} 
                 type={inputType}
                 placeholder={placeholder}
+                value={value}
+                onChange={onChange}
               />
 
             {type === "password" && (
