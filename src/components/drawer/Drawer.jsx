@@ -1,20 +1,141 @@
 import './Drawer.css';
+import { useState, useRef, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-function Drawer() {
+const ToggleIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <line x1="9" y1="3" x2="9" y2="21" />
+    </svg>
+);
+
+const PlusIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+);
+
+const SearchIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="7" />
+        <line x1="21" y1="21" x2="16.5" y2="16.5" />
+    </svg>
+);
+
+function Drawer({ chatRooms, user, onNewChat }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const footerRef = useRef(null);
+    const searchInputRef = useRef(null);
+    const navigate = useNavigate();
+
+    // 설정 메뉴가 열려 있을 때 바깥을 클릭하면 닫는다
+    useEffect(() => {
+        if (!isSettingsOpen) return;
+        const handleClickOutside = (e) => {
+            if (footerRef.current && !footerRef.current.contains(e.target)) {
+                setIsSettingsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isSettingsOpen]);
+
+    const filteredRooms = chatRooms.filter((room) =>
+        room.title.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+
+    // 접힌 상태에서 검색 아이콘을 누르면 드로어를 펼치고 검색창에 포커스
+    const handleSearchClick = () => {
+        setIsOpen(true);
+        setTimeout(() => searchInputRef.current?.focus(), 0);
+    };
+
+    const handleLogout = () => {
+        setIsSettingsOpen(false);
+        // TODO: 백엔드 연동 시 로그아웃 API 호출 + 토큰 정리
+        navigate("/login");
+    };
 
     return (
-        <aside className="drawer">
+        <aside className={isOpen ? "drawer" : "drawer closed"}>
             <header className="drawer-header">
-                <button className="drawer-toggle-btn">O</button>
+                <button
+                    className="drawer-toggle-btn"
+                    onClick={() => setIsOpen(!isOpen)}
+                    title={isOpen ? "드로어 닫기" : "드로어 열기"}
+                >
+                    <ToggleIcon />
+                </button>
             </header>
+
+            <section className="drawer-actions">
+                <button className="drawer-action-btn" onClick={onNewChat}>
+                    <PlusIcon />
+                    <span className="drawer-label">새 채팅</span>
+                </button>
+
+                {/* 접힘/펼침에서 같은 엘리먼트를 유지해야 아이콘이 순간이동하지 않는다 */}
+                <div
+                    className="drawer-search"
+                    onClick={isOpen ? undefined : handleSearchClick}
+                >
+                    <SearchIcon />
+                    <input
+                        ref={searchInputRef}
+                        type="text"
+                        placeholder="채팅 검색"
+                        value={searchKeyword}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                    />
+                </div>
+            </section>
+
             <nav className="drawer-chatroom">
+                <p className="drawer-section-title">채팅방</p>
                 <ul className="drawer-chatroom-list">
-                    <li className="drawer-chatroom-item">1번 채팅방</li>
-                    <li className="drawer-chatroom-item">2번 채팅방</li>
+                    {filteredRooms.map((room) => (
+                        <li key={room.id}>
+                            <NavLink
+                                to={`/chat/${room.id}`}
+                                className={({ isActive }) =>
+                                    isActive ? "drawer-chatroom-item active" : "drawer-chatroom-item"
+                                }
+                            >
+                                {room.title}
+                            </NavLink>
+                        </li>
+                    ))}
+                    {filteredRooms.length === 0 && (
+                        <li className="drawer-chatroom-empty">검색 결과가 없어요</li>
+                    )}
                 </ul>
             </nav>
-            <footer className="drawer-footer">
-                <button className="settings-btn"></button>
+
+            <footer className="drawer-footer" ref={footerRef}>
+                {isSettingsOpen && (
+                    <div className="settings-menu">
+                        <button onClick={() => alert("계정 정보는 준비 중이에요.")}>계정 정보</button>
+                        <button onClick={() => alert("알림 정보는 준비 중이에요.")}>알림 정보</button>
+                        <div className="settings-menu-divider" />
+                        <button className="logout" onClick={handleLogout}>로그아웃</button>
+                    </div>
+                )}
+                <button
+                    className="settings-btn"
+                    onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                >
+                    <div className="user-profile-img">{user.name.charAt(0)}</div>
+                    <div className="user-info">
+                        <span className="user-name">{user.name}</span>
+                        <span className="user-email">{user.email}</span>
+                    </div>
+                </button>
             </footer>
         </aside>
     )
