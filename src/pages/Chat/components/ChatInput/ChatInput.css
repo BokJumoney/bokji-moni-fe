@@ -1,0 +1,80 @@
+.chat-input-wrapper {
+  padding: 0 40px 24px;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 16px;
+}
+
+.attach-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.attach-icon {
+  font-size: 20px;
+  transform: rotate(45deg);
+}
+
+.chat-input-field {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #1f2937;
+  background-color: transparent;
+}
+
+.chat-input-field::placeholder {
+  color: #9ca3af;
+}
+
+.send-btn {
+  background-color: #10b981;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.send-btn:hover {
+  background-color: #059669;
+}
+
+.send-icon {
+  font-size: 18px;
+}
+
+.security-notice {
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.lock-icon {
+  font-size: 14px;
+}
