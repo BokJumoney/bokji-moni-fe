@@ -67,3 +67,8 @@ p{
     margin: 0 auto;
     text-align: center;
 }
+ㅎ.error-message{
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 8px;
+}
