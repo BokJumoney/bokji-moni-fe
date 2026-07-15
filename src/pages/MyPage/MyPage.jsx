@@ -9,6 +9,7 @@ import {
 } from "../../services/mypage/myPageApi";
 import Button from "../../components/common/Button";
 import "./MyPage.css";
+import Header from "../../components/common/Header.jsx";
 
 const HOUSEHOLD_TYPES = [
   { value: "", label: "선택하세요" },
@@ -264,240 +265,246 @@ export default function MyPage() {
   }
 
   return (
-    <div className="mypage">
-      <div className="mypage__container">
-        <h1 className="mypage__title">마이페이지</h1>
+      <>
+        {/* ── Header / Navigation ── */}
+        <Header />
 
-        {/* 계정 정보 카드 */}
-        <section className="mypage__section">
-          <h2 className="mypage__section-title">계정 정보</h2>
-          <div className="mypage__card">
-            <div className="mypage__field">
-              <label className="mypage__label">이메일</label>
-              <div className="mypage__readonly">{profile.email}</div>
-            </div>
+        <div className="mypage">
+          <div className="mypage__container">
+            <h1 className="mypage__title">마이페이지</h1>
 
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="mypage-name">이름</label>
-              <div className="mypage__inline-edit">
-                <input
-                  id="mypage-name"
-                  type="text"
-                  className={`mypage__input ${nameError ? "mypage__input--error" : ""}`}
-                  value={nameValue}
-                  onChange={(e) => {
-                    setNameValue(e.target.value);
-                    setNameError("");
-                    setNameSuccess(false);
-                  }}
-                  onKeyDown={handleNameKeyDown}
-                  maxLength={100}
-                />
-                <button
-                  className="mypage__save-btn"
-                  onClick={handleNameSave}
-                  disabled={nameSaving}
-                >
-                  {nameSaving ? "저장 중..." : "저장"}
-                </button>
+            {/* 계정 정보 카드 */}
+            <section className="mypage__section">
+              <h2 className="mypage__section-title">계정 정보</h2>
+              <div className="mypage__card">
+                <div className="mypage__field">
+                  <label className="mypage__label">이메일</label>
+                  <div className="mypage__readonly">{profile.email}</div>
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="mypage-name">이름</label>
+                  <div className="mypage__inline-edit">
+                    <input
+                        id="mypage-name"
+                        type="text"
+                        className={`mypage__input ${nameError ? "mypage__input--error" : ""}`}
+                        value={nameValue}
+                        onChange={(e) => {
+                          setNameValue(e.target.value);
+                          setNameError("");
+                          setNameSuccess(false);
+                        }}
+                        onKeyDown={handleNameKeyDown}
+                        maxLength={100}
+                    />
+                    <button
+                        className="mypage__save-btn"
+                        onClick={handleNameSave}
+                        disabled={nameSaving}
+                    >
+                      {nameSaving ? "저장 중..." : "저장"}
+                    </button>
+                  </div>
+                  {nameError && <p className="mypage__field-error">{nameError}</p>}
+                  {nameSuccess && <p className="mypage__field-success">이름이 저장되었습니다.</p>}
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label">가입일</label>
+                  <div className="mypage__readonly">
+                    {formatDate(profile.created_at)}
+                  </div>
+                </div>
               </div>
-              {nameError && <p className="mypage__field-error">{nameError}</p>}
-              {nameSuccess && <p className="mypage__field-success">이름이 저장되었습니다.</p>}
-            </div>
+            </section>
 
-            <div className="mypage__field">
-              <label className="mypage__label">가입일</label>
-              <div className="mypage__readonly">
-                {formatDate(profile.created_at)}
+            {/* 복지 정보 폼 */}
+            <section className="mypage__section">
+              <h2 className="mypage__section-title">맞춤 복지 정보</h2>
+              <div className="mypage__card">
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-birth-date">
+                    생년월일
+                  </label>
+                  <input
+                      id="welfare-birth-date"
+                      type="date"
+                      className={`mypage__input ${welfareFieldErrors.birth_date ? "mypage__input--error" : ""}`}
+                      value={welfare.birth_date}
+                      onChange={(e) => handleWelfareChange("birth_date", e.target.value)}
+                  />
+                  {welfareFieldErrors.birth_date && (
+                      <p className="mypage__field-error">{welfareFieldErrors.birth_date}</p>
+                  )}
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-monthly-income">
+                    월 소득 (원)
+                  </label>
+                  <input
+                      id="welfare-monthly-income"
+                      type="number"
+                      className={`mypage__input ${welfareFieldErrors.monthly_income ? "mypage__input--error" : ""}`}
+                      placeholder="0"
+                      min="0"
+                      value={welfare.monthly_income}
+                      onChange={(e) => handleWelfareChange("monthly_income", e.target.value)}
+                  />
+                  {welfareFieldErrors.monthly_income && (
+                      <p className="mypage__field-error">{welfareFieldErrors.monthly_income}</p>
+                  )}
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-family-size">
+                    가구원 수
+                  </label>
+                  <input
+                      id="welfare-family-size"
+                      type="number"
+                      className={`mypage__input ${welfareFieldErrors.family_size ? "mypage__input--error" : ""}`}
+                      placeholder="1"
+                      min="1"
+                      max="30"
+                      value={welfare.family_size}
+                      onChange={(e) => handleWelfareChange("family_size", e.target.value)}
+                  />
+                  {welfareFieldErrors.family_size && (
+                      <p className="mypage__field-error">{welfareFieldErrors.family_size}</p>
+                  )}
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-household-type">
+                    가구 유형
+                  </label>
+                  <select
+                      id="welfare-household-type"
+                      className="mypage__select"
+                      value={welfare.household_type}
+                      onChange={(e) => handleWelfareChange("household_type", e.target.value)}
+                  >
+                    {HOUSEHOLD_TYPES.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-region">
+                    거주 지역 (시·도)
+                  </label>
+                  <input
+                      id="welfare-region"
+                      type="text"
+                      className="mypage__input"
+                      placeholder="서울특별시"
+                      maxLength={100}
+                      value={welfare.region}
+                      onChange={(e) => handleWelfareChange("region", e.target.value)}
+                  />
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-district">
+                    거주 지역 (시·군·구)
+                  </label>
+                  <input
+                      id="welfare-district"
+                      type="text"
+                      className="mypage__input"
+                      placeholder="강남구"
+                      maxLength={100}
+                      value={welfare.district}
+                      onChange={(e) => handleWelfareChange("district", e.target.value)}
+                  />
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-has-disability">
+                    장애 여부
+                  </label>
+                  <select
+                      id="welfare-has-disability"
+                      className="mypage__select"
+                      value={welfare.has_disability}
+                      onChange={(e) => handleWelfareChange("has_disability", e.target.value)}
+                  >
+                    <option value="">선택하세요</option>
+                    <option value="true">예</option>
+                    <option value="false">아니오</option>
+                  </select>
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-assets">
+                    자산 (원)
+                  </label>
+                  <input
+                      id="welfare-assets"
+                      type="number"
+                      className={`mypage__input ${welfareFieldErrors.assets ? "mypage__input--error" : ""}`}
+                      placeholder="0"
+                      min="0"
+                      value={welfare.assets}
+                      onChange={(e) => handleWelfareChange("assets", e.target.value)}
+                  />
+                  {welfareFieldErrors.assets && (
+                      <p className="mypage__field-error">{welfareFieldErrors.assets}</p>
+                  )}
+                </div>
+
+                <div className="mypage__field">
+                  <label className="mypage__label" htmlFor="welfare-employment-status">
+                    고용 상태
+                  </label>
+                  <select
+                      id="welfare-employment-status"
+                      className="mypage__select"
+                      value={welfare.employment_status}
+                      onChange={(e) => handleWelfareChange("employment_status", e.target.value)}
+                  >
+                    {EMPLOYMENT_STATUSES.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mypage__field">
+                  <div className="mypage__save-wrap">
+                    {welfareError && <p className="mypage__field-error">{welfareError}</p>}
+                    {welfareSuccess && (
+                        <p className="mypage__field-success">복지 정보가 저장되었습니다.</p>
+                    )}
+                    <Button
+                        value={welfareSaving ? "저장 중..." : "복지 정보 저장"}
+                        onClick={handleWelfareSave}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        {/* 복지 정보 폼 */}
-        <section className="mypage__section">
-          <h2 className="mypage__section-title">맞춤 복지 정보</h2>
-          <div className="mypage__card">
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-birth-date">
-                생년월일
-              </label>
-              <input
-                id="welfare-birth-date"
-                type="date"
-                className={`mypage__input ${welfareFieldErrors.birth_date ? "mypage__input--error" : ""}`}
-                value={welfare.birth_date}
-                onChange={(e) => handleWelfareChange("birth_date", e.target.value)}
-              />
-              {welfareFieldErrors.birth_date && (
-                <p className="mypage__field-error">{welfareFieldErrors.birth_date}</p>
-              )}
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-monthly-income">
-                월 소득 (원)
-              </label>
-              <input
-                id="welfare-monthly-income"
-                type="number"
-                className={`mypage__input ${welfareFieldErrors.monthly_income ? "mypage__input--error" : ""}`}
-                placeholder="0"
-                min="0"
-                value={welfare.monthly_income}
-                onChange={(e) => handleWelfareChange("monthly_income", e.target.value)}
-              />
-              {welfareFieldErrors.monthly_income && (
-                <p className="mypage__field-error">{welfareFieldErrors.monthly_income}</p>
-              )}
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-family-size">
-                가구원 수
-              </label>
-              <input
-                id="welfare-family-size"
-                type="number"
-                className={`mypage__input ${welfareFieldErrors.family_size ? "mypage__input--error" : ""}`}
-                placeholder="1"
-                min="1"
-                max="30"
-                value={welfare.family_size}
-                onChange={(e) => handleWelfareChange("family_size", e.target.value)}
-              />
-              {welfareFieldErrors.family_size && (
-                <p className="mypage__field-error">{welfareFieldErrors.family_size}</p>
-              )}
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-household-type">
-                가구 유형
-              </label>
-              <select
-                id="welfare-household-type"
-                className="mypage__select"
-                value={welfare.household_type}
-                onChange={(e) => handleWelfareChange("household_type", e.target.value)}
-              >
-                {HOUSEHOLD_TYPES.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-region">
-                거주 지역 (시·도)
-              </label>
-              <input
-                id="welfare-region"
-                type="text"
-                className="mypage__input"
-                placeholder="서울특별시"
-                maxLength={100}
-                value={welfare.region}
-                onChange={(e) => handleWelfareChange("region", e.target.value)}
-              />
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-district">
-                거주 지역 (시·군·구)
-              </label>
-              <input
-                id="welfare-district"
-                type="text"
-                className="mypage__input"
-                placeholder="강남구"
-                maxLength={100}
-                value={welfare.district}
-                onChange={(e) => handleWelfareChange("district", e.target.value)}
-              />
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-has-disability">
-                장애 여부
-              </label>
-              <select
-                id="welfare-has-disability"
-                className="mypage__select"
-                value={welfare.has_disability}
-                onChange={(e) => handleWelfareChange("has_disability", e.target.value)}
-              >
-                <option value="">선택하세요</option>
-                <option value="true">예</option>
-                <option value="false">아니오</option>
-              </select>
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-assets">
-                자산 (원)
-              </label>
-              <input
-                id="welfare-assets"
-                type="number"
-                className={`mypage__input ${welfareFieldErrors.assets ? "mypage__input--error" : ""}`}
-                placeholder="0"
-                min="0"
-                value={welfare.assets}
-                onChange={(e) => handleWelfareChange("assets", e.target.value)}
-              />
-              {welfareFieldErrors.assets && (
-                <p className="mypage__field-error">{welfareFieldErrors.assets}</p>
-              )}
-            </div>
-
-            <div className="mypage__field">
-              <label className="mypage__label" htmlFor="welfare-employment-status">
-                고용 상태
-              </label>
-              <select
-                id="welfare-employment-status"
-                className="mypage__select"
-                value={welfare.employment_status}
-                onChange={(e) => handleWelfareChange("employment_status", e.target.value)}
-              >
-                {EMPLOYMENT_STATUSES.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mypage__field">
-              <div className="mypage__save-wrap">
-                {welfareError && <p className="mypage__field-error">{welfareError}</p>}
-                {welfareSuccess && (
-                  <p className="mypage__field-success">복지 정보가 저장되었습니다.</p>
-                )}
-                <Button
-                  value={welfareSaving ? "저장 중..." : "복지 정보 저장"}
-                  onClick={handleWelfareSave}
-                />
+            {/* 안내 영역 */}
+            <section className="mypage__section mypage__notice">
+              <p className="mypage__notice-icon">&#9432;</p>
+              <div className="mypage__notice-text">
+                <p>입력하신 정보는 맞춤 복지 추천에 사용됩니다.</p>
+                <p>
+                  민감정보는 최소한으로 수집하며, 언제든지 필드를 비워 저장하면
+                  해당 정보가 삭제됩니다.
+                </p>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
+        </div>
+      </>
 
-        {/* 안내 영역 */}
-        <section className="mypage__section mypage__notice">
-          <p className="mypage__notice-icon">&#9432;</p>
-          <div className="mypage__notice-text">
-            <p>입력하신 정보는 맞춤 복지 추천에 사용됩니다.</p>
-            <p>
-              민감정보는 최소한으로 수집하며, 언제든지 필드를 비워 저장하면
-              해당 정보가 삭제됩니다.
-            </p>
-          </div>
-        </section>
-      </div>
-    </div>
   );
 }
