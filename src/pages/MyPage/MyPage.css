@@ -1,0 +1,241 @@
+.mypage {
+  min-height: 100vh;
+  background-color: var(--gray-background, #f8fafb);
+  padding: 40px 24px;
+}
+
+.mypage__container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.mypage__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark, #1a1a1a);
+  margin: 0 0 32px;
+}
+
+.mypage__loading,
+.mypage__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--text-gray, #555);
+  font-size: 15px;
+}
+
+.mypage__retry-btn {
+  margin-top: 12px;
+  padding: 8px 20px;
+  border: 1px solid var(--green-primary, #22a45d);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--green-primary, #22a45d);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mypage__retry-btn:hover {
+  background: var(--green-light, #e8f5e9);
+}
+
+/* 섹션 */
+.mypage__section {
+  margin-bottom: 24px;
+}
+
+.mypage__section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark, #1a1a1a);
+  margin: 0 0 12px;
+}
+
+/* 카드 */
+.mypage__card {
+  background: #fff;
+  border: 1px solid var(--boder-line, #e6edf0);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* 필드 */
+.mypage__field {
+  margin-bottom: 20px;
+}
+
+.mypage__field:last-child {
+  margin-bottom: 0;
+}
+
+.mypage__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-gray, #555);
+  margin-bottom: 6px;
+}
+
+.mypage__readonly {
+  font-size: 15px;
+  color: var(--text-dark, #1a1a1a);
+  padding: 10px 12px;
+  background: var(--gray-background, #f8fafb);
+  border-radius: 8px;
+  word-break: break-all;
+}
+
+/* 수정 가능한 이름 행 */
+.mypage__inline-edit {
+  display: flex;
+  gap: 8px;
+}
+
+.mypage__inline-edit .mypage__input {
+  flex: 1;
+}
+
+.mypage__save-btn {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--green-primary, #22a45d);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mypage__save-btn:hover {
+  background: var(--green-dark, #1b8a4c);
+}
+
+.mypage__save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 입력 공통 */
+.mypage__input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--boder-line, #e6edf0);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-dark, #1a1a1a);
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.mypage__input:focus {
+  border-color: var(--green-primary, #22a45d);
+}
+
+.mypage__input--error {
+  border-color: #d33;
+}
+
+.mypage__input--error:focus {
+  border-color: #d33;
+}
+
+/* 셀렉트 */
+.mypage__select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--boder-line, #e6edf0);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-dark, #1a1a1a);
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23555' d='M6 5.657L1.343 1 0 2.343l6 6 6-6L10.657 1z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.15s;
+}
+
+.mypage__select:focus {
+  border-color: var(--green-primary, #22a45d);
+}
+
+/* 에러/성공 메시지 */
+.mypage__field-error {
+  color: #d33;
+  font-size: 12px;
+  margin: 4px 0 0;
+}
+
+.mypage__field-success {
+  color: var(--green-primary, #22a45d);
+  font-size: 13px;
+  margin: 4px 0 0;
+}
+
+/* 저장 버튼 래퍼 */
+.mypage__save-wrap {
+  margin-top: 8px;
+}
+
+/* 안내 영역 */
+.mypage__notice {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid var(--boder-line, #e6edf0);
+  border-radius: 12px;
+}
+
+.mypage__notice-icon {
+  font-size: 20px;
+  color: var(--green-primary, #22a45d);
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.mypage__notice-text p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-gray, #555);
+  line-height: 1.6;
+}
+
+.mypage__notice-text p + p {
+  margin-top: 4px;
+}
+
+/* button 컴포넌트의 margin override */
+.mypage__save-wrap .btn-container {
+  margin: 0;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .mypage {
+    padding: 24px 16px;
+  }
+
+  .mypage__card {
+    padding: 20px 16px;
+  }
+
+  .mypage__inline-edit {
+    flex-direction: column;
+  }
+
+  .mypage__save-btn {
+    width: 100%;
+  }
+}
