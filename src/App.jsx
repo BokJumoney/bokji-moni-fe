@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import "./App.css"
 
 import Login from "./pages/Login/Login";
@@ -7,20 +7,75 @@ import ManagerPage from "./pages/Manager/ManagerPage"
 import ChatPage from "./pages/Chat/ChatPage";
 import MainPage from "./pages/Main/MainPage";
 import ChatLayout from "./layouts/ChatLayout.jsx";
+import { useAuth } from "./context/useAuth";
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="loading-screen">로딩 중...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+function PublicOnlyRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="loading-screen">로딩 중...</div>;
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
+
+function ChatPageRoute() {
+  const { chatRoomId } = useParams();
+  return <ChatPage key={chatRoomId || 'new'} />;
+}
 
 function App() {
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/manager" element={<ManagerPage />} />
-        <Route element={<ChatLayout />} >
+        <Route path="/login" element={
+          <PublicOnlyRoute>
+            <Login />
+          </PublicOnlyRoute>
+        } />
+        <Route path="/signup" element={
+          <PublicOnlyRoute>
+            <Signup />
+          </PublicOnlyRoute>
+        } />
+        <Route path="/manager" element={
+          <ProtectedRoute>
+            <ManagerPage />
+          </ProtectedRoute>
+        } />
+        <Route element={<ChatLayout />}>
           <Route path="/" element={<MainPage />} />
-          <Route path="/chat/:chatRoomId" element={<ChatPage />} />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <ChatPageRoute />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat/:chatRoomId" element={
+            <ProtectedRoute>
+              <ChatPageRoute />
+            </ProtectedRoute>
+          } />
         </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes >
     </>
   )

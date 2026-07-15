@@ -1,6 +1,7 @@
 import './Drawer.css';
 import { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
 const ToggleIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -26,13 +27,14 @@ const SearchIcon = () => (
     </svg>
 );
 
-function Drawer({ chatRooms, user, onNewChat }) {
+function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const footerRef = useRef(null);
     const searchInputRef = useRef(null);
     const navigate = useNavigate();
+    const { user, logout } = useAuth();
 
     // 설정 메뉴가 열려 있을 때 바깥을 클릭하면 닫는다
     useEffect(() => {
@@ -56,9 +58,9 @@ function Drawer({ chatRooms, user, onNewChat }) {
         setTimeout(() => searchInputRef.current?.focus(), 0);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setIsSettingsOpen(false);
-        // TODO: 백엔드 연동 시 로그아웃 API 호출 + 토큰 정리
+        await logout();
         navigate("/login");
     };
 
@@ -99,7 +101,21 @@ function Drawer({ chatRooms, user, onNewChat }) {
             <nav className="drawer-chatroom">
                 <p className="drawer-section-title">채팅방</p>
                 <ul className="drawer-chatroom-list">
-                    {filteredRooms.map((room) => (
+                    {roomsLoading && (
+                        <li className="drawer-chatroom-empty">불러오는 중...</li>
+                    )}
+                    {!roomsLoading && roomsError && (
+                        <li className="drawer-chatroom-empty">
+                            <span>{roomsError}</span>
+                            <button
+                                className="drawer-chatroom-retry"
+                                onClick={onRetry}
+                            >
+                                다시 시도
+                            </button>
+                        </li>
+                    )}
+                    {!roomsLoading && !roomsError && filteredRooms.map((room) => (
                         <li key={room.id}>
                             <NavLink
                                 to={`/chat/${room.id}`}
@@ -111,8 +127,10 @@ function Drawer({ chatRooms, user, onNewChat }) {
                             </NavLink>
                         </li>
                     ))}
-                    {filteredRooms.length === 0 && (
-                        <li className="drawer-chatroom-empty">검색 결과가 없어요</li>
+                    {!roomsLoading && !roomsError && filteredRooms.length === 0 && (
+                        <li className="drawer-chatroom-empty">
+                            {searchKeyword ? "검색 결과가 없어요" : "채팅방이 없어요"}
+                        </li>
                     )}
                 </ul>
             </nav>
@@ -126,16 +144,18 @@ function Drawer({ chatRooms, user, onNewChat }) {
                         <button className="logout" onClick={handleLogout}>로그아웃</button>
                     </div>
                 )}
-                <button
-                    className="settings-btn"
-                    onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                >
-                    <div className="user-profile-img">{user.name.charAt(0)}</div>
-                    <div className="user-info">
-                        <span className="user-name">{user.name}</span>
-                        <span className="user-email">{user.email}</span>
-                    </div>
-                </button>
+                {user && (
+                    <button
+                        className="settings-btn"
+                        onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                    >
+                        <div className="user-profile-img">{user.name.charAt(0)}</div>
+                        <div className="user-info">
+                            <span className="user-name">{user.name}</span>
+                            <span className="user-email">{user.email}</span>
+                        </div>
+                    </button>
+                )}
             </footer>
         </aside>
     )
