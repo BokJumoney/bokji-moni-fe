@@ -11,13 +11,64 @@
 html {
   width: 100vw;
   height: 100vh;
+  --green-primary: #22A45D;
+  --green-dark: #1B8A4C;
+  --green-light: #E8F5E9;
+  --text-dark: #1A1A1A;
+  --text-gray: #555;
+  --text-light: #888;
+  --bg-white: #FFFFFF;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --color-title-high: #568a35;
+  --color-title-medium: #7cb153;
+  --color-title-low: #a6cf7a;
+  --color-body: #595959;
+
+  --boder-line: #e6edf0;
+  --gray-background: #f8fafb;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
 }
 
 @font-face {
-    font-family: 'GMarketSans';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-    font-weight: 500;
-    font-display: swap;
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+
+  body {
+    margin: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
+      Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo',
+      'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    color: var(--text-dark);
+    background: var(--bg-white);
+  }
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  text-align: left;
+  border: none;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
 }
 
 html,
@@ -33,9 +84,38 @@ select {
   box-sizing: border-box;
 }
 
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 700;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 body,
 #root {
   width: 100%;
   height: 100%;
 }
 
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}

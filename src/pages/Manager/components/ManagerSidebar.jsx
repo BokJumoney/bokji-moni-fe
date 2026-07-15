@@ -1,9 +1,16 @@
 import logo from "../../../assets/logo.png";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/useAuth";
 
 const ManagerSidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
     return <aside className="manager-sidebar">
         <button className="sidebar-logo" type="button" onClick={() => navigate("/admin/policies")}>
@@ -27,7 +34,7 @@ const ManagerSidebar = () => {
             신청서 업로드하기
           </button>
         </nav>
-        <button className="sidebar-logout" type="button" onClick={() => navigate("/login")}>
+        <button className="sidebar-logout" type="button" onClick={handleLogout}>
           로그아웃
         </button>
       </aside>
