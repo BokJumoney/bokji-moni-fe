@@ -19,6 +19,18 @@ export async function postLogin({ email, password }) {
   });
 }
 
+export async function getSession() {
+  return buildJsonRequest(`${AUTH_PATH}/session`, {
+    method: "GET",
+  });
+}
+
+export async function postLogout() {
+  return buildJsonRequest(`${AUTH_PATH}/logout`, {
+    method: "POST",
+  });
+}
+
 export async function checkEmailDuplicate(email) {
   return buildJsonRequest(`${AUTH_PATH}/check-email`, {
     method: "POST",

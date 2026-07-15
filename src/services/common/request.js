@@ -3,6 +3,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 export async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`;
   const response = await fetch(url, {
+    credentials: "include",
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
@@ -15,7 +16,7 @@ export async function request(path, options = {}) {
   }
 
   if (!response.ok) {
-    const message = data?.message || `API Error: ${response.status} ${response.statusText}`;
+    const message = data?.message || data?.detail?.message || `API Error: ${response.status} ${response.statusText}`;
     const error = new Error(message);
     error.status = response.status;
     error.data = data;

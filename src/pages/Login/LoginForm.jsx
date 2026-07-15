@@ -3,6 +3,7 @@ import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { postLogin } from "../../services/login/loginApi";
+import { useAuth } from "../../context/useAuth";
 
 export default function LoginForm() {
     const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function LoginForm() {
     const [errorMsg, setErrorMsg] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSubmit = async () => {
         setErrorMsg("");
@@ -22,9 +24,7 @@ export default function LoginForm() {
         setLoading(true);
         try {
             const data = await postLogin({ email, password });
-            if (data.accessToken) {
-                localStorage.setItem("accessToken", data.accessToken);
-            }
+            login(data.user);
             navigate("/");
         } catch (err) {
             setErrorMsg(err.message || "로그인에 실패했습니다.");
