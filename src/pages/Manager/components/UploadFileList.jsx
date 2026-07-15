@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getFileMeta } from "../../../utils/fileutils";
 
-const UploadFileList = ({uploadedFiles, onDeleteFile}) => {
+const UploadFileList = ({ uploadedFiles, onDeleteFile, title, showPolicy = false }) => {
     const [deletingFileId, setDeletingFileId] = useState("");
     const [deleteError, setDeleteError] = useState("");
 
@@ -22,7 +22,7 @@ const UploadFileList = ({uploadedFiles, onDeleteFile}) => {
         <section className="table-card">
             <div className="table-card-header">
               <div>
-                <h2>업로드 파일 목록</h2>
+                <h2>{title}</h2>
                 <p>총 {uploadedFiles.length}개의 파일이 등록되어 있습니다.</p>
                 {deleteError && <p className="upload-error">{deleteError}</p>}
               </div>
@@ -34,6 +34,7 @@ const UploadFileList = ({uploadedFiles, onDeleteFile}) => {
                   <tr>
                     <th>파일명</th>
                     <th>파일 형식</th>
+                    {showPolicy && <th>해당 복지 정책</th>}
                     <th>크기</th>
                     <th>업로드 일시</th>
                     <th>상태</th>
@@ -53,6 +54,7 @@ const UploadFileList = ({uploadedFiles, onDeleteFile}) => {
                           </div>
                         </td>
                         <td>{file.type}</td>
+                        {showPolicy && <td>{file.policyName}</td>}
                         <td>{file.size}</td>
                         <td>{file.uploadedAt}</td>
                         <td>
@@ -66,6 +68,13 @@ const UploadFileList = ({uploadedFiles, onDeleteFile}) => {
                       </tr>
                     );
                   })}
+                  {uploadedFiles.length === 0 && (
+                    <tr>
+                      <td className="empty-table-cell" colSpan={showPolicy ? 7 : 6}>
+                        아직 업로드된 파일이 없습니다.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
