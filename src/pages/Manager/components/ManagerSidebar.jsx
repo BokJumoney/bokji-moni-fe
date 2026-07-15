@@ -1,17 +1,30 @@
 import logo from "../../../assets/logo.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ManagerSidebar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     return <aside className="manager-sidebar">
-        <button className="sidebar-logo" type="button">
+        <button className="sidebar-logo" type="button" onClick={() => navigate("/admin/policies")}>
           <img src={logo} alt="복지모니 로고" />
         </button>
         <nav className="sidebar-menu" aria-label="관리자 메뉴">
-          <button type="button" onClick={() => navigate("/login")}>
-            <span>⌂</span>
-            홈
+          <button
+            className={location.pathname === "/admin/policies" ? "active" : ""}
+            type="button"
+            onClick={() => navigate("/admin/policies")}
+          >
+            <span aria-hidden="true">▣</span>
+            복지 정책 업로드하기
+          </button>
+          <button
+            className={location.pathname === "/admin/applications" ? "active" : ""}
+            type="button"
+            onClick={() => navigate("/admin/applications")}
+          >
+            <span aria-hidden="true">▤</span>
+            신청서 업로드하기
           </button>
         </nav>
         <button className="sidebar-logout" type="button" onClick={() => navigate("/login")}>

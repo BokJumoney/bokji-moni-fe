@@ -11,9 +11,13 @@ const parseErrorMessage = async (response) => {
   }
 };
 
-export const uploadAdminFile = async (file) => {
+export const uploadAdminFile = async (file, metadata = {}) => {
   const formData = new FormData();
   formData.append("file", file);
+
+  Object.entries(metadata).forEach(([key, value]) => {
+    if (value) formData.append(key, value);
+  });
 
   const response = await fetch(buildApiUrl("/admin/file"), {
     method: "POST",
