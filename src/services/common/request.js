@@ -4,8 +4,11 @@ export async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`;
   const response = await fetch(url, {
     credentials: "include",
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
   });
 
   let data = null;

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import "./App.css"
 
 import Login from "./pages/Login/Login";
@@ -37,6 +37,11 @@ function PublicOnlyRoute({ children }) {
   return children;
 }
 
+function ChatPageRoute() {
+  const { chatRoomId } = useParams();
+  return <ChatPage key={chatRoomId || 'new'} />;
+}
+
 function App() {
 
   return (
@@ -57,13 +62,18 @@ function App() {
             <ManagerPage />
           </ProtectedRoute>
         } />
-        <Route element={
-          <ProtectedRoute>
-            <ChatLayout />
-          </ProtectedRoute>
-        }>
+        <Route element={<ChatLayout />}>
           <Route path="/" element={<MainPage />} />
-          <Route path="/chat/:chatRoomId" element={<ChatPage />} />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <ChatPageRoute />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat/:chatRoomId" element={
+            <ProtectedRoute>
+              <ChatPageRoute />
+            </ProtectedRoute>
+          } />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes >
