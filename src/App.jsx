@@ -10,6 +10,7 @@ import Signup from "./pages/Signup/Signup";
 import ManagerPage from "./pages/Manager/ManagerPage"
 import ChatPage from "./pages/Chat/ChatPage";
 import MainPage from "./pages/Main/MainPage";
+import MyPage from "./pages/MyPage/MyPage";
 import ChatLayout from "./layouts/ChatLayout.jsx";
 import { useAuth } from "./context/useAuth";
 
@@ -50,59 +51,59 @@ function App() {
 
   return (
     <>
-<Routes>
-  <Route
-    path="/login"
-    element={
-      <PublicOnlyRoute>
-        <Login />
-      </PublicOnlyRoute>
-    }
-  />
-  <Route
-    path="/signup"
-    element={
-      <PublicOnlyRoute>
-        <Signup />
-      </PublicOnlyRoute>
-    }
-  />
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <Login />
+            </PublicOnlyRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicOnlyRoute>
+              <Signup />
+            </PublicOnlyRoute>
+          }
+        />
 
-  <Route
-    path="/admin"
-    element={
-      <ProtectedRoute>
-        <ManagerPage />
-      </ProtectedRoute>
-    }
-  >
-    <Route index element={<Navigate to="/admin/policies" replace />} />
-    <Route path="policies" element={<PolicyUploadPage />} />
-    <Route path="applications" element={<ApplicationUploadPage />} />
-  </Route>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <ManagerPage />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="/admin/policies" replace />} />
+          <Route path="policies" element={<PolicyUploadPage />} />
+          <Route path="applications" element={<ApplicationUploadPage />} />
+        </Route>
 
-  <Route element={<ChatLayout />}>
-    <Route path="/" element={<MainPage />} />
-    <Route
-      path="/chat"
-      element={
-        <ProtectedRoute>
-          <ChatPageRoute />
-        </ProtectedRoute>
-      }
-    />
-    <Route
-      path="/chat/:chatRoomId"
-      element={
-        <ProtectedRoute>
-          <ChatPageRoute />
-        </ProtectedRoute>
-      }
-    />
-  </Route>
+        <Route element={<ChatLayout />}>
+          <Route path="/" element={<MainPage />} />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <ChatPageRoute />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat/:chatRoomId"
+            element={
+              <ProtectedRoute>
+                <ChatPageRoute />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
-  <Route path="*" element={<Navigate to="/" replace />} />
-</Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   )
 }

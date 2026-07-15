@@ -10,100 +10,107 @@
 |------|------|
 | **프로젝트명** | 복지머니 (AI 미니 프로젝트) |
 | **목적** | 대한민국의 복지 정책을 사용자에게 대화형으로 전달하고 신청을 보조 |
-| **프론트엔드 역할** | 사용자 인터페이스 제공 — 챗봇 대화, 복지 정보 탐색, 신청 안내 |
-| **현재 상태** | 기획 완료 · 프론트엔드 작업 시작 |
+| **프론트엔드 역할** | 사용자 인터페이스 제공 — 챗봇 대화, 복지 정보 탐색, 회원가입/로그인 등 |
+| **현재 상태** | 주요 UI 및 라우팅 구현 완료, 인증 기능 및 백엔드 API 연동 작업 중 |
 
 ---
 
 ## 2. 기술 스택
 
-| 기술 | 용도            |
-|------|---------------|
-| **React** | UI 라이브러리      |
+| 기술 | 용도 |
+|------|------|
+| **React (v19)** | UI 라이브러리 |
 | **Vite** | 빌드 도구 · 개발 서버 |
-| FastAPI | REST / WebSocket API 서버 |
-| PostgreDB + pgvector | 벡터 검색 기반 복지 정보 저장 |
-| LangChain · LangGraph | AI 대화 파이프라인 |
+| **React Router v7** | 페이지 라우팅 관리 |
+| **Context API** | 사용자 인증 및 전역 상태 관리 (`useAuth`) |
+| **CSS Modules / Vanilla CSS** | 컴포넌트 스타일링 |
+| **ESLint / Babel** | 코드 린팅 및 컴파일러 플러그인 (React Compiler 등) |
 
 ---
 
-## 3. 폴더 구조 (계획)
+## 3. 폴더 구조 (현재 상태)
 
 ```
 bokji-moni-fe/
-├── public/                  # 정적 파일 (favicon, 아이콘 등)
-│   ├── favicon.svg
-│   └── icons.svg
+├── public/                  # 정적 파일 (favicon, SVG 아이콘 등)
 ├── src/
-│   ├── assets/              # 이미지, SVG 등 정적 에셋
+│   ├── api/                 # 어드민 전용 등 기타 API 파일 (adminFiles.js 등)
+│   ├── assets/              # 이미지, 로고 등 정적 에셋
 │   ├── components/          # 재사용 가능한 UI 컴포넌트
-│   │   ├── common/          #   공통 (Button, Input, Modal 등)
-│   │   ├── chat/            #   챗봇 관련 (ChatBubble, ChatInput 등)
-│   │   └── welfare/         #   복지 정보 관련 (WelfareCard 등)
-│   ├── pages/               # 라우트별 페이지 컴포넌트
-│   │   ├── HomePage.jsx     #   랜딩 / 메인 페이지
-│   │   ├── ChatPage.jsx     #   AI 챗봇 대화 페이지
-│   │   └── WelfarePage.jsx  #   복지 정보 탐색 페이지
+│   │   ├── BrandSection/    # 브랜딩 관련 UI 컴포넌트
+│   │   ├── common/          # 공통 UI 컴포넌트 (버튼, 인풋 등)
+│   │   ├── drawer/          # 사이드 메뉴/서랍장 UI 컴포넌트
+│   │   └── welfare/         # 복지 정보 관련 컴포넌트
+│   ├── context/             # 전역 상태 관리 Context (`useAuth.js` 등)
 │   ├── hooks/               # 커스텀 React 훅
-│   ├── services/            # API 호출 모듈 (백엔드 통신)
-│   ├── store/               # 전역 상태 관리
-│   ├── styles/              # 글로벌 스타일 · 디자인 토큰
+│   ├── layouts/             # 공통 레이아웃 컴포넌트 (`ChatLayout.jsx` 등)
+│   ├── pages/               # 라우트별 페이지 컴포넌트
+│   │   ├── Chat/            # AI 챗봇 대화 페이지
+│   │   ├── Login/           # 로그인 페이지
+│   │   ├── Main/            # 메인 / 랜딩 페이지
+│   │   ├── Manager/         # 관리자 전용 페이지
+│   │   ├── MyPage/          # 마이페이지
+│   │   └── Signup/          # 회원가입 페이지
+│   ├── services/            # API 호출 모듈 (도메인별로 분리)
+│   │   ├── chat/            # 챗봇 관련 API (`chatApi.js` 등)
+│   │   ├── common/          # 공통 API 모듈 (`request.js` 등)
+│   │   ├── login/           # 로그인 관련 API
+│   │   └── signup/          # 회원가입 관련 API
 │   ├── utils/               # 유틸리티 함수
-│   ├── App.jsx              # 루트 컴포넌트 · 라우팅 설정
-│   ├── App.css              # 앱 레벨 스타일
-│   ├── main.jsx             # 엔트리 포인트
+│   ├── App.jsx              # 라우팅 설정 및 최상위 컴포넌트
+│   ├── App.css              # 앱 레벨 전역 스타일
+│   ├── main.jsx             # React 엔트리 포인트
 │   └── index.css            # 글로벌 CSS 변수 · 리셋
-├── index.html               # HTML 템플릿
-├── vite.config.js           # Vite 설정
-├── eslint.config.js         # ESLint 설정
-├── package.json
-└── README.md                # ← 이 문서
+├── index.html               # HTML 메인 템플릿
+├── vite.config.js           # Vite 번들러 설정
+├── eslint.config.js         # ESLint 린트 규칙 설정
+└── package.json             # 프로젝트 의존성 관리
 ```
 
 ---
 
-## 4. 핵심 화면 · 기능
+## 4. 핵심 화면 및 라우팅 구조
 
-### 4.1 메인 페이지 (`HomePage`)
-- 서비스 소개 및 핵심 가치 전달
-- AI 챗봇으로 바로 이동하는 CTA 버튼
-- 인기 복지 정책 미리보기 카드
+현재 프론트엔드는 `react-router-dom`을 이용하여 다음과 같이 라우팅이 구성되어 있습니다. `useAuth` Context를 활용하여 사용자의 로그인 여부에 따라 접근이 제어됩니다.
 
-### 4.2 AI 챗봇 페이지 (`ChatPage`)
-- 실시간 대화형 인터페이스 (WebSocket 또는 SSE)
-- 사용자 질문 → AI가 맞춤 복지 정책 추천
-- 대화 히스토리 표시
-- 추천 정책 카드 인라인 표시
+### 4.1 로그인 및 회원가입 (`/login`, `/signup`)
+- **접근 권한:** 비로그인 사용자 전용 (`PublicOnlyRoute`)
+- **주요 기능:** 이메일 및 비밀번호 기반 로그인/회원가입 처리
 
-### 4.3 복지 정보 탐색 (`WelfarePage`)
-- 카테고리별 복지 정책 목록
-- 검색 · 필터링 기능
-- 상세 정보 모달 / 페이지
-- 신청 방법 안내 링크
+### 4.2 메인 페이지 (`/`)
+- **접근 권한:** 제한 없음 (ChatLayout 내에 표시)
+- **주요 기능:** 
+  - 복지머니 서비스 안내 및 브랜드 소개
+  - AI 챗봇으로 이동하기 위한 진입점 제공
+
+### 4.3 AI 챗봇 페이지 (`/chat`, `/chat/:chatRoomId`)
+- **접근 권한:** 로그인 사용자 전용 (`ProtectedRoute`)
+- **주요 기능:**
+  - 사용자의 채팅 방 ID별로 분리된 실시간 대화형 인터페이스
+  - 사용자의 정보와 질문을 바탕으로 맞춤형 복지 정책 탐색 및 답변 추천
+
+### 4.4 관리자 페이지 (`/manager`)
+- **접근 권한:** 로그인 사용자 전용 (관리자 권한 추가 필요)
+- **주요 기능:** 데이터 관리 및 복지 관련 정책 업데이트 모니터링
 
 ---
 
-## 5. API 연동 구조 (예정)
+## 5. API 연동 구조
 
-```
-프론트엔드 (React)
-    │
-    ├── REST API ──────── FastAPI 서버
-    │   ├── GET  /api/welfare          복지 정책 목록
-    │   ├── GET  /api/welfare/:id      복지 정책 상세
-    │   └── POST /api/welfare/search   검색 (pgvector)
-    │
-    └── WebSocket / SSE ── FastAPI 서버
-        └── /api/chat                  AI 대화 스트리밍
-```
+서버와의 통신은 `src/services` 디렉토리 내에 도메인 단위로 분리되어 관리됩니다.
+
+- **`services/common/request.js`**: `fetch` API를 래핑한 공통 HTTP 요청 인스턴스 (토큰 등 공통 헤더 처리)
+- **`services/login/loginApi.js`**: 로그인 요청 처리
+- **`services/signup/signupApi.js`**: 회원가입 정보 검증 및 요청 처리
+- **`services/chat/chatApi.js`**: 채팅 룸 관리 및 대화 내역(히스토리) 조회 등
 
 ---
 
 ## 6. 개발 환경 설정
 
 ### 사전 요구사항
-- **Node.js** 20.x 이상
-- **npm** 10.x 이상
+- **Node.js** 20.x 이상 권장
+- **npm** 10.x 이상 권장
 
 ### 시작하기
 
@@ -114,45 +121,31 @@ npm install
 # 개발 서버 실행 (HMR 지원)
 npm run dev
 
-# 프로덕션 빌드
+# 빌드 및 린트 검사
 npm run build
-
-# 빌드 결과 미리보기
-npm run preview
-
-# 린트 검사
 npm run lint
 ```
 
-### 환경 변수 (예정)
-
-```env
-VITE_API_BASE_URL=http://localhost:8000
-VITE_WS_URL=ws://localhost:8000/api/chat
-```
-
 ---
 
-## 7. 컨벤션
+## 7. 컨벤션 가이드
 
 | 항목 | 규칙 |
 |------|------|
-| **컴포넌트** | PascalCase (`ChatBubble.jsx`) |
-| **훅** | camelCase, `use` 접두사 (`useChat.js`) |
-| **스타일** | 컴포넌트명과 동일 (`ChatBubble.css`) |
-| **상수** | UPPER_SNAKE_CASE |
-| **API 모듈** | camelCase (`welfareApi.js`) |
+| **컴포넌트** | PascalCase 폴더 및 파일명 (`ChatPage.jsx`, `BrandSection`) |
+| **훅 (Hook)** | camelCase, `use` 접두사 (`useAuth.js`) |
+| **API 서비스** | camelCase (`loginApi.js`) |
+| **라우팅 제어** | `ProtectedRoute`, `PublicOnlyRoute` 컴포넌트로 접근 권한 강제 |
 
 ---
 
-## 8. 향후 로드맵
+## 8. 현재 진행 상태 및 향후 과제
 
-- [ ] 프로젝트 폴더 구조 세팅
-- [ ] React Router 도입 · 페이지 라우팅 구성
-- [ ] 디자인 시스템 (색상, 타이포, 컴포넌트) 정의
-- [ ] 메인 페이지 UI 구현
-- [ ] AI 챗봇 페이지 UI 구현
-- [ ] 백엔드 API 연동
-- [ ] 복지 정보 탐색 페이지 구현
-- [ ] 반응형 · 모바일 최적화
-- [ ] 배포 파이프라인 구성
+- [x] 프로젝트 초기 세팅 및 폴더 구조 정립
+- [x] React Router V7 기반의 페이지 라우팅 적용
+- [x] 인증 처리 (Context API) 및 라우트 가드 구현
+- [x] 로그인 / 회원가입 페이지 UI 및 API 모듈 연결
+- [x] 메인 레이아웃 (`ChatLayout`) 및 기본 페이지 구현
+- [ ] AI 챗봇 대화창 UI 고도화 및 WebSocket 연동
+- [ ] 반응형 최적화 (모바일 웹 화면 대응)
+- [ ] 상세 복지 정책 탐색 기능 구현
