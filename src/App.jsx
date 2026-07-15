@@ -6,6 +6,7 @@ import Signup from "./pages/Signup/Signup";
 import ManagerPage from "./pages/Manager/ManagerPage"
 import ChatPage from "./pages/Chat/ChatPage";
 import MainPage from "./pages/Main/MainPage";
+import MyPage from "./pages/MyPage/MyPage";
 import ChatLayout from "./layouts/ChatLayout.jsx";
 import { useAuth } from "./context/useAuth";
 
@@ -56,6 +57,11 @@ function App() {
           <PublicOnlyRoute>
             <Signup />
           </PublicOnlyRoute>
+        } />
+        <Route path="/mypage" element={
+          <ProtectedRoute>
+            <MyPage />
+          </ProtectedRoute>
         } />
         <Route path="/manager" element={
           <ProtectedRoute>
