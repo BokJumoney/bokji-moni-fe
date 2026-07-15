@@ -30,6 +30,7 @@ export default function Header() {
                             <span className="header__admin-badge">관리자</span>
                         )}
                         <span className="header__user-name">{user.name}님</span>
+                        <button type="button" onClick={() => navigate('/mypage')} className="header__mypage-btn">마이페이지</button>
                         <button type="button" onClick={handleLogout} className="header__logout-btn">로그아웃</button>
                     </div>
                 ) : (

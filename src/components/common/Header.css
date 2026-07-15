@@ -69,8 +69,9 @@
     padding: 3px 8px;
 }
 
-/* 로그아웃 버튼 */
-.header__logout-btn {
+/* 로그아웃, 마이페이지 버튼 */
+.header__logout-btn,
+.header__mypage-btn {
     background-color: transparent;
     color: #666;
     border: 1px solid #ddd;
@@ -82,7 +83,8 @@
     transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.header__logout-btn:hover {
+.header__logout-btn:hover,
+.header__mypage-btn:hover {
     background-color: #f5f5f5;
     color: #333;
     border-color: #bbb;

@@ -138,7 +138,7 @@ function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
             <footer className="drawer-footer" ref={footerRef}>
                 {isSettingsOpen && (
                     <div className="settings-menu">
-                        <button onClick={() => alert("계정 정보는 준비 중이에요.")}>계정 정보</button>
+                        <button onClick={() => { setIsSettingsOpen(false); navigate("/mypage"); }}>계정 정보</button>
                         <button onClick={() => alert("알림 정보는 준비 중이에요.")}>알림 정보</button>
                         <div className="settings-menu-divider" />
                         <button className="logout" onClick={handleLogout}>로그아웃</button>
