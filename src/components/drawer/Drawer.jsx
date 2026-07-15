@@ -27,7 +27,7 @@ const SearchIcon = () => (
     </svg>
 );
 
-function Drawer({ chatRooms, onNewChat }) {
+function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -101,7 +101,21 @@ function Drawer({ chatRooms, onNewChat }) {
             <nav className="drawer-chatroom">
                 <p className="drawer-section-title">채팅방</p>
                 <ul className="drawer-chatroom-list">
-                    {filteredRooms.map((room) => (
+                    {roomsLoading && (
+                        <li className="drawer-chatroom-empty">불러오는 중...</li>
+                    )}
+                    {!roomsLoading && roomsError && (
+                        <li className="drawer-chatroom-empty">
+                            <span>{roomsError}</span>
+                            <button
+                                className="drawer-chatroom-retry"
+                                onClick={onRetry}
+                            >
+                                다시 시도
+                            </button>
+                        </li>
+                    )}
+                    {!roomsLoading && !roomsError && filteredRooms.map((room) => (
                         <li key={room.id}>
                             <NavLink
                                 to={`/chat/${room.id}`}
@@ -113,8 +127,10 @@ function Drawer({ chatRooms, onNewChat }) {
                             </NavLink>
                         </li>
                     ))}
-                    {filteredRooms.length === 0 && (
-                        <li className="drawer-chatroom-empty">검색 결과가 없어요</li>
+                    {!roomsLoading && !roomsError && filteredRooms.length === 0 && (
+                        <li className="drawer-chatroom-empty">
+                            {searchKeyword ? "검색 결과가 없어요" : "채팅방이 없어요"}
+                        </li>
                     )}
                 </ul>
             </nav>

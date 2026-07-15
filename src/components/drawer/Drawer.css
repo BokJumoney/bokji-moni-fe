@@ -201,6 +201,26 @@
   padding: 10px 12px;
   font-size: 13px;
   color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.drawer-chatroom-retry {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border: 1px solid var(--green-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.drawer-chatroom-retry:hover {
+  background: var(--green-light);
 }
 
 /* ── 하단: 사용자/설정 ── */
