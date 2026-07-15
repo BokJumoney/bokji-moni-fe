@@ -2,15 +2,20 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`;
+  const isFormData = options.body instanceof FormData;
+
   const response = await fetch(url, {
     credentials: "include",
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      ...(isFormData
+        ? {}
+        : {
+            'Content-Type': 'application/json',
+          }),
       ...(options.headers || {}),
     },
   });
-
   let data = null;
   try {
     data = await response.json();
