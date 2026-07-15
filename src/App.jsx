@@ -5,9 +5,7 @@ import PolicyUploadPage from "./pages/Manager/PolicyUploadPage";
 import ApplicationUploadPage from "./pages/Manager/ApplicationUploadPage";
 import "./App.css"
 
-import Login from "./pages/Login/Login";
 import Signup from "./pages/Signup/Signup";
-import ManagerPage from "./pages/Manager/ManagerPage"
 import ChatPage from "./pages/Chat/ChatPage";
 import MainPage from "./pages/Main/MainPage";
 import MyPage from "./pages/MyPage/MyPage";

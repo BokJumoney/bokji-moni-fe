@@ -76,11 +76,11 @@
     background: #f4f8f0;
 }
 
-.sidebar-menu button.active {
+/* .sidebar-menu button.active {
     color: #ffffff;
     background: var(--color-title-high);
     box-shadow: 0 12px 24px rgba(86, 138, 53, 0.2);
-}
+} */
 
 .sidebar-menu button.active span {
     color: #ffffff;
