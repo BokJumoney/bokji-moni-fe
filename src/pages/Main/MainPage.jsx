@@ -9,17 +9,12 @@ function MainPage() {
   const navigate = useNavigate()
   const [inputValue, setInputValue] = useState('')
 
-  const handleSearch = async () => {
-    if (!inputValue.trim()) {
-      navigate('/chat')
-      return
-    }
-
-    try {
-      await postChatRequest(inputValue)
-    } catch (error) {
-      console.error(error)
-    } finally {
+  const handleSearch = () => {
+    const trimmed = inputValue.trim()
+    if (trimmed) {
+      navigate('/chat', { state: { pendingMessage: trimmed } })
+      setInputValue('')
+    } else {
       navigate('/chat')
     }
   }
