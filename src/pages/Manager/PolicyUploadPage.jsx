@@ -1,11 +1,8 @@
 import AdminUploadPage from "./components/AdminUploadPage";
+import PolicyUpdateButton from "./components/PolicyUpdateButton.jsx";
 
 const PolicyUploadPage = () => {
-  const updatePolicy = async () => {
-    const res = await fetch("http://localhost:8000/manager/api_call");
-    const data = await res.json();
-    console.log(data);
-  };
+
 
   return (
     <AdminUploadPage
@@ -18,9 +15,7 @@ const PolicyUploadPage = () => {
       accept=".pdf"
       extension="pdf"
       fileLabel="PDF"
-      headerAction={
-        <button id="api-call-btn" onClick={updatePolicy}>정책 업데이트</button>
-      }
+      headerAction={<PolicyUpdateButton />}
     />
   );
 };
