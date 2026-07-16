@@ -29,6 +29,7 @@ const AdminUploadPage = ({
   extension,
   fileLabel,
   requiresPolicy = false,
+  headerAction = null,
 }) => {
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -151,6 +152,7 @@ const AdminUploadPage = ({
           <h1>{title}</h1>
           <span className="page-sub-title">{subtitle}</span>
         </div>
+        {headerAction && <div>{headerAction}</div>}
       </header>
 
       <main className="manager-main">

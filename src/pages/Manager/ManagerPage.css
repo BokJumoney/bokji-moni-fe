@@ -101,9 +101,34 @@
 
 .manager-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 36px;
     width: 100%;
+}
+
+#api-call-btn {
+    margin-right: 30px;
+    width : 130px;
+    height : 60px;
+    border-radius: 12px;
+    padding: 0 22px;
+    font-weight: 800;
+    background: var(--color-title-low);
+    box-shadow: 0 12px 24px rgba(86, 138, 53, 0.22);
+    border: 1px solid #c0dbb7;
+    color: #596956;
+}
+#api-call-btn:hover {
+    width : 130px;
+    height : 60px;
+    border-radius: 12px;
+    padding: 0 22px;
+    font-weight: 800;
+    background: var(--color-title-high);
+    box-shadow: 0 12px 24px rgba(86, 138, 53, 0.22);
+    border: 1px solid #c0dbb7;
+    color: #596956;
 }
 
 .back-btn {
