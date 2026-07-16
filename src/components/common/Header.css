@@ -1,0 +1,108 @@
+/* ── Header ── */
+.header {
+    width: 100%;
+    padding: 20px 0;
+    position: relative;
+    z-index: 100;
+}
+
+.header__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 로고 */
+.header__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.header__logo-img {
+    width: 100px;
+    height: 70px;
+}
+
+/* 로그인 버튼 */
+.header__login-btn {
+    background-color: #22A45D;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.header__login-btn:hover {
+    background-color: #1B8A4C;
+    box-shadow: 0 4px 12px rgba(34, 164, 93, 0.3);
+}
+
+/* 로그인 상태 사용자 메뉴 */
+.header__user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header__user-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.header__admin-badge {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #22A45D;
+    border-radius: 4px;
+    padding: 3px 8px;
+}
+
+/* 로그아웃, 마이페이지 버튼 */
+.header__logout-btn,
+.header__mypage-btn {
+    background-color: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.header__logout-btn:hover,
+.header__mypage-btn:hover {
+    background-color: #f5f5f5;
+    color: #333;
+    border-color: #bbb;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .header__inner {
+        padding: 0 24px;
+    }
+
+    .header__nav {
+        gap: 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .header__nav {
+        display: none;
+    }
+}

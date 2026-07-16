@@ -2,12 +2,21 @@
 body {
   margin: 0;
 }
+h1{
+    margin-bottom: 5px;
+}
+p{
+    margin-top: 5px;
+}
 
 /* 로그인 컨테이너 */
 .login-container {
-  width: 100vw;
+  width: 70vw;
   height: 100vh;
   display: flex;
+  margin-left: 300px;
+  margin-right: 300px;
+  background-color: white;
 }
 /* 로고 섹션 */
 .brand-section {
@@ -25,7 +34,41 @@ body {
   justify-content: center;
   align-items: center;
 }
-
+/* 로그인 폼 섹션 */
 .login-form {
   width: 350px;
+  height: 80vh;
+  position: relative;
+  top: 105px;
+  
+}
+/* 설명 */
+.subscript {
+    color:gray;
+}
+/* 입력창 위 제목 */
+.input-title{
+    font-weight: bolder;
+}
+/* 회원가입 링크 */
+.signup-link{
+    color:#568a35;
+    font-weight: bolder;
+    text-decoration: none;
+}
+/* 하단 설명 컨테이너 */
+.subscript2-wrap{
+    width: 66%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+/* 하단 설명 텍스트 */
+.subscript2-container{
+    margin: 0 auto;
+    text-align: center;
+}
+ㅎ.error-message{
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 8px;
 }

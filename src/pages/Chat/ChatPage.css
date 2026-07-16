@@ -1,0 +1,12 @@
+.chat-page-container {
+  display: flex;
+  flex-direction: row;
+  height: 100svh;
+  width: 100%;
+  background-color: #ffffff;
+  color: #333333;
+  overflow: hidden;
+  /* Reset some of the root container limits to allow full expansion */
+  flex: 1;
+  text-align: left;
+}
