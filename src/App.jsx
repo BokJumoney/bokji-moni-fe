@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
+import "./App.css"
+
 import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
 import ManagerPage from "./pages/Manager/ManagerPage"
 import PolicyUploadPage from "./pages/Manager/PolicyUploadPage";
 import ApplicationUploadPage from "./pages/Manager/ApplicationUploadPage";
-import "./App.css"
-
-import Signup from "./pages/Signup/Signup";
 import ChatPage from "./pages/Chat/ChatPage";
 import MainPage from "./pages/Main/MainPage";
 import MyPage from "./pages/MyPage/MyPage";
@@ -79,6 +79,15 @@ function App() {
           <Route path="policies" element={<PolicyUploadPage />} />
           <Route path="applications" element={<ApplicationUploadPage />} />
         </Route>
+
+        <Route
+          path="/mypage"
+          element={
+            <ProtectedRoute>
+              <MyPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route element={<ChatLayout />}>
           <Route path="/" element={<MainPage />} />
