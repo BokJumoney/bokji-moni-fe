@@ -8,6 +8,15 @@ export const uploadAdminFile = async (file, metadata = {}) => {
     if (value) formData.append(key, value);
   });
 
+   // 신청서 업로드
+  if (metadata.fileCategory === "application") {
+    return request("/admin/form", {
+      method: "POST",
+      body: formData,
+      headers: {},
+    });
+  }
+
   return request("/admin/file", {
     method: "POST",
     body: formData,

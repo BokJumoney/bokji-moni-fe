@@ -5,18 +5,8 @@ import { formatUploadedAt } from "../../../utils/dateutils.js";
 import { formatFileSize, getExtension, getFileMeta } from "../../../utils/fileutils.js";
 import UploadFileList from "./UploadFileList";
 
-const POLICY_STORAGE_KEY = "bokjumoni-admin-policies";
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
-// const readStoredPolicies = () => {
-//   try {
-//     return JSON.parse(localStorage.getItem(POLICY_STORAGE_KEY) ?? "[]");
-//   } catch {
-//     return [];
-//   }
-// };
-
-// const getPolicyName = (filename) => filename.replace(/\.pdf$/i, "");
 
 const AdminUploadPage = ({
   pageType,
@@ -51,6 +41,7 @@ const AdminUploadPage = ({
     try {
       const data = await getAdminPolicies();
       setPolicies(data);
+      console.log("정책", data);
     } catch (error) {
       console.error("정책 목록 조회 실패", error);
     }
