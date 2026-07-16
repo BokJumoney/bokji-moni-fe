@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import WelfareCard from '../../../../components/welfare/WelfareCard';
 import { formatTime } from '../../../../utils/messageUtils';
+import MarkdownMessage from './MarkdownMessage';
 import './MessageList.css';
 
 function MessageList({ messages, isLoading }) {
@@ -18,7 +19,11 @@ function MessageList({ messages, isLoading }) {
             <div className="message-avatar">🤖</div>
           )}
           <div className={`message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`}>
-            <p>{msg.content}</p>
+            {msg.role === 'assistant' ? (
+              <MarkdownMessage content={msg.content} />
+            ) : (
+              <p className="message-text">{msg.content}</p>
+            )}
             {msg.sources && msg.sources.length > 0 && (
               <div className="message-sources">
                 {msg.sources.map((src, i) => (

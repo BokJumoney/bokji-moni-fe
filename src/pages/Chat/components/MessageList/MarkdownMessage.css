@@ -1,0 +1,173 @@
+.markdown-message {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.markdown-message > :first-child {
+  margin-top: 0;
+}
+
+.markdown-message > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-message h1,
+.markdown-message h2,
+.markdown-message h3,
+.markdown-message h4,
+.markdown-message h5,
+.markdown-message h6 {
+  line-height: 1.35;
+  margin: 1.1em 0 0.45em;
+}
+
+.markdown-message h1 {
+  font-size: 1.5em;
+}
+
+.markdown-message h2 {
+  font-size: 1.35em;
+}
+
+.markdown-message h3 {
+  font-size: 1.2em;
+}
+
+.markdown-message h4,
+.markdown-message h5,
+.markdown-message h6 {
+  font-size: 1.05em;
+}
+
+.markdown-message p,
+.markdown-message ul,
+.markdown-message ol,
+.markdown-message blockquote,
+.markdown-message pre,
+.markdown-message table,
+.markdown-message hr {
+  margin: 0 0 0.85em;
+}
+
+.markdown-message ul,
+.markdown-message ol {
+  padding-left: 1.5em;
+}
+
+.markdown-message ul ul,
+.markdown-message ul ol,
+.markdown-message ol ul,
+.markdown-message ol ol {
+  margin: 0.25em 0 0;
+}
+
+.markdown-message li + li {
+  margin-top: 0.25em;
+}
+
+.markdown-message li > p {
+  margin-bottom: 0.35em;
+}
+
+.markdown-message strong {
+  font-weight: 700;
+}
+
+.markdown-message a {
+  color: #16794a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-message a:hover {
+  color: #0f6039;
+}
+
+.markdown-message a:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid #22a45d;
+  outline-offset: 2px;
+}
+
+.markdown-message blockquote {
+  padding: 0.65em 0.9em;
+  border-left: 4px solid #7cb153;
+  background-color: #f1f7ed;
+  color: #4b5563;
+}
+
+.markdown-message blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-message code {
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  background-color: #e9edf1;
+  font-family: Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+.markdown-message pre {
+  max-width: 100%;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background-color: #1f2937;
+  color: #f9fafb;
+  overflow-x: auto;
+}
+
+.markdown-message pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: 0.875em;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+.markdown-message table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+}
+
+.markdown-message th,
+.markdown-message td {
+  min-width: 96px;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  text-align: left;
+}
+
+.markdown-message th {
+  background-color: #edf5e8;
+  font-weight: 700;
+}
+
+.markdown-message tbody tr:nth-child(even) {
+  background-color: #f6f8f9;
+}
+
+.markdown-message hr {
+  border: 0;
+  border-top: 1px solid #d1d5db;
+}
+
+.markdown-message input[type='checkbox'] {
+  margin: 0 0.4em 0 0;
+  accent-color: #22a45d;
+}
+
+.markdown-message .contains-task-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.markdown-image-placeholder {
+  color: #6b7280;
+  font-style: italic;
+}
