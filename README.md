@@ -89,63 +89,19 @@ bokji-moni-fe/
   - 사용자의 채팅 방 ID별로 분리된 실시간 대화형 인터페이스
   - 사용자의 정보와 질문을 바탕으로 맞춤형 복지 정책 탐색 및 답변 추천
 
-### 4.4 관리자 페이지 (`/manager`)
-- **접근 권한:** 로그인 사용자 전용 (관리자 권한 추가 필요)
-- **주요 기능:** 데이터 관리 및 복지 관련 정책 업데이트 모니터링
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
----
+Currently, two official plugins are available:
 
-## 5. API 연동 구조
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-서버와의 통신은 `src/services` 디렉토리 내에 도메인 단위로 분리되어 관리됩니다.
+## React Compiler
 
-- **`services/common/request.js`**: `fetch` API를 래핑한 공통 HTTP 요청 인스턴스 (토큰 등 공통 헤더 처리)
-- **`services/login/loginApi.js`**: 로그인 요청 처리
-- **`services/signup/signupApi.js`**: 회원가입 정보 검증 및 요청 처리
-- **`services/chat/chatApi.js`**: 채팅 룸 관리 및 대화 내역(히스토리) 조회 등
+The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
 
----
+Note: This will impact Vite dev & build performances.
 
-## 6. 개발 환경 설정
+## Expanding the ESLint configuration
 
-### 사전 요구사항
-- **Node.js** 20.x 이상 권장
-- **npm** 10.x 이상 권장
-
-### 시작하기
-
-```bash
-# 의존성 설치
-npm install
-
-# 개발 서버 실행 (HMR 지원)
-npm run dev
-
-# 빌드 및 린트 검사
-npm run build
-npm run lint
-```
-
----
-
-## 7. 컨벤션 가이드
-
-| 항목 | 규칙 |
-|------|------|
-| **컴포넌트** | PascalCase 폴더 및 파일명 (`ChatPage.jsx`, `BrandSection`) |
-| **훅 (Hook)** | camelCase, `use` 접두사 (`useAuth.js`) |
-| **API 서비스** | camelCase (`loginApi.js`) |
-| **라우팅 제어** | `ProtectedRoute`, `PublicOnlyRoute` 컴포넌트로 접근 권한 강제 |
-
----
-
-## 8. 현재 진행 상태 및 향후 과제
-
-- [x] 프로젝트 초기 세팅 및 폴더 구조 정립
-- [x] React Router V7 기반의 페이지 라우팅 적용
-- [x] 인증 처리 (Context API) 및 라우트 가드 구현
-- [x] 로그인 / 회원가입 페이지 UI 및 API 모듈 연결
-- [x] 메인 레이아웃 (`ChatLayout`) 및 기본 페이지 구현
-- [ ] AI 챗봇 대화창 UI 고도화 및 WebSocket 연동
-- [ ] 반응형 최적화 (모바일 웹 화면 대응)
-- [ ] 상세 복지 정책 탐색 기능 구현
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

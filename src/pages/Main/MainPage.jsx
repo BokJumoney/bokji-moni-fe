@@ -30,7 +30,6 @@ function MainPage() {
     <div className="main-page" style={{ backgroundImage: `url(${bgImg})` }}>
 
       {/* ── Header / Navigation ── */}
-      <Header />
 
       {/* ── Hero Section ── */}
       <section className="hero">
