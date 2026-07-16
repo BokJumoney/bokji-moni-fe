@@ -21,3 +21,10 @@ export const deleteAdminFile = async (fileId) => {
     headers: {},
   });
 };
+
+  //정책 id 가져오기
+export const getAdminPolicies = async () => {
+  return request("/admin/policies", {
+    method: "GET",
+  });
+};

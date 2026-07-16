@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import upload from "../../../assets/upload.png";
-import { deleteAdminFile, uploadAdminFile } from "../../../api/adminFiles.js";
+import { deleteAdminFile, uploadAdminFile, getAdminPolicies } from "../../../api/adminFiles.js";
 import { formatUploadedAt } from "../../../utils/dateutils.js";
 import { formatFileSize, getExtension, getFileMeta } from "../../../utils/fileutils.js";
 import UploadFileList from "./UploadFileList";
@@ -8,15 +8,15 @@ import UploadFileList from "./UploadFileList";
 const POLICY_STORAGE_KEY = "bokjumoni-admin-policies";
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
-const readStoredPolicies = () => {
-  try {
-    return JSON.parse(localStorage.getItem(POLICY_STORAGE_KEY) ?? "[]");
-  } catch {
-    return [];
-  }
-};
+// const readStoredPolicies = () => {
+//   try {
+//     return JSON.parse(localStorage.getItem(POLICY_STORAGE_KEY) ?? "[]");
+//   } catch {
+//     return [];
+//   }
+// };
 
-const getPolicyName = (filename) => filename.replace(/\.pdf$/i, "");
+// const getPolicyName = (filename) => filename.replace(/\.pdf$/i, "");
 
 const AdminUploadPage = ({
   pageType,
@@ -36,13 +36,28 @@ const AdminUploadPage = ({
   const [selectedPolicyId, setSelectedPolicyId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [policies, setPolicies] = useState(readStoredPolicies);
+  const [policies, setPolicies] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
 
   const hasSelectedFiles = selectedFiles.length > 0;
   const selectedPolicy = policies.find((policy) => policy.id === selectedPolicyId);
   const canUpload = hasSelectedFiles && (!requiresPolicy || Boolean(selectedPolicy));
+
+  useEffect(() => {
+  if (!requiresPolicy) return;
+
+  const fetchPolicies = async () => {
+    try {
+      const data = await getAdminPolicies();
+      setPolicies(data);
+    } catch (error) {
+      console.error("정책 목록 조회 실패", error);
+    }
+  };
+
+  fetchPolicies();
+}, [requiresPolicy]);
 
   const applySelectedFiles = (files) => {
     const file = Array.from(files ?? [])[0];
@@ -106,18 +121,6 @@ const AdminUploadPage = ({
       };
 
       setUploadedFiles((current) => [newRow, ...current]);
-
-      if (!requiresPolicy) {
-        const newPolicy = {
-          id: uploadedFile.fileId,
-          name: getPolicyName(uploadedFile.originalFilename),
-        };
-        setPolicies((current) => {
-          const next = [newPolicy, ...current.filter((policy) => policy.id !== newPolicy.id)];
-          localStorage.setItem(POLICY_STORAGE_KEY, JSON.stringify(next));
-          return next;
-        });
-      }
 
       setSelectedFiles([]);
       setSelectedPolicyId("");
