@@ -4,6 +4,7 @@ import { useAuth } from "../../context/useAuth";
 import { getSession } from "../../services/login/loginApi";
 import {
   getNotificationSettings,
+  getPolicySubscriptions,
   updateNotificationPause,
   updatePolicyNews,
 } from "../../services/subscription/subscriptionApi";
@@ -15,6 +16,18 @@ const EMPTY_SETTINGS = {
   is_paused: false,
   updated_at: "",
 };
+
+function normalizeNotificationSettings(data = {}) {
+  const source = data?.settings || data;
+  const toBoolean = (value) =>
+    value === true || value === 1 || value === "true" || value === "1";
+
+  return {
+    policy_news_enabled: toBoolean(source.policy_news_enabled),
+    is_paused: toBoolean(source.is_paused),
+    updated_at: source.updated_at || "",
+  };
+}
 
 function getErrorCode(error) {
   return error?.data?.detail?.code;
@@ -33,6 +46,17 @@ function getErrorMessage(error, fallback) {
   return detail?.message || error?.message || fallback;
 }
 
+function formatDate(dateString) {
+  if (!dateString) return "날짜 정보 없음";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return dateString;
+  return new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
 function Toggle({ id, checked, disabled, label, description, onChange }) {
   return (
     <label className={`settings-toggle-row ${disabled ? "settings-toggle-row--disabled" : ""}`} htmlFor={id}>
@@ -48,7 +72,10 @@ function Toggle({ id, checked, disabled, label, description, onChange }) {
           disabled={disabled}
           onChange={(event) => onChange(event.target.checked)}
         />
-        <span className="settings-switch-track" aria-hidden="true" />
+        <span
+          className={`settings-switch-track ${checked ? "settings-switch-track--checked" : ""}`}
+          aria-hidden="true"
+        />
       </span>
     </label>
   );
@@ -58,6 +85,10 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
   const [activeSection, setActiveSection] = useState(initialSection);
   const [sessionUser, setSessionUser] = useState(null);
   const [settings, setSettings] = useState(EMPTY_SETTINGS);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [subscriptionQuery, setSubscriptionQuery] = useState("");
+  const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(true);
+  const [subscriptionsError, setSubscriptionsError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [saveError, setSaveError] = useState("");
@@ -86,7 +117,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
         getNotificationSettings(),
       ]);
       setSessionUser(sessionData?.user || null);
-      setSettings(notificationData);
+      setSettings(normalizeNotificationSettings(notificationData));
     } catch (error) {
       if (!(await handleAuthenticationError(error))) {
         setLoadError(getErrorMessage(error, "설정 정보를 불러오지 못했습니다."));
@@ -96,17 +127,40 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
     }
   }, [handleAuthenticationError]);
 
+  const loadSubscriptions = useCallback(async () => {
+    try {
+      const subscriptionData = await getPolicySubscriptions();
+      setSubscriptions(Array.isArray(subscriptionData?.items) ? subscriptionData.items : []);
+    } catch (error) {
+      if (!(await handleAuthenticationError(error))) {
+        setSubscriptionsError(getErrorMessage(error, "구독 정책 목록을 불러오지 못했습니다."));
+      }
+    } finally {
+      setIsSubscriptionsLoading(false);
+    }
+  }, [handleAuthenticationError]);
+
   useEffect(() => {
     if (!isOpen) return;
-    const timer = window.setTimeout(loadSettings, 0);
-    return () => window.clearTimeout(timer);
-  }, [isOpen, loadSettings]);
+    const settingsTimer = window.setTimeout(loadSettings, 0);
+    const subscriptionsTimer = window.setTimeout(loadSubscriptions, 0);
+    return () => {
+      window.clearTimeout(settingsTimer);
+      window.clearTimeout(subscriptionsTimer);
+    };
+  }, [isOpen, loadSettings, loadSubscriptions]);
 
   const handleRetry = () => {
     setIsLoading(true);
     setLoadError("");
     setSaveError("");
     loadSettings();
+  };
+
+  const handleSubscriptionsRetry = () => {
+    setIsSubscriptionsLoading(true);
+    setSubscriptionsError("");
+    loadSubscriptions();
   };
 
   useEffect(() => {
@@ -150,6 +204,14 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
 
   if (!isOpen) return null;
 
+  const normalizedSubscriptionQuery = subscriptionQuery.trim().toLocaleLowerCase("ko-KR");
+  const filteredSubscriptions = subscriptions.filter((subscription) => {
+    if (!normalizedSubscriptionQuery) return true;
+    return [subscription.service_name, subscription.service_id]
+      .filter(Boolean)
+      .some((value) => value.toLocaleLowerCase("ko-KR").includes(normalizedSubscriptionQuery));
+  });
+
   const handlePolicyNewsChange = async (enabled) => {
     const previousSettings = settings;
     setSettings((current) => ({ ...current, policy_news_enabled: enabled }));
@@ -158,7 +220,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
 
     try {
       const data = await updatePolicyNews(enabled);
-      setSettings(data);
+      setSettings(normalizeNotificationSettings(data));
     } catch (error) {
       setSettings(previousSettings);
       if (!(await handleAuthenticationError(error))) {
@@ -177,7 +239,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
 
     try {
       const data = await updateNotificationPause(paused);
-      setSettings(data);
+      setSettings(normalizeNotificationSettings(data));
     } catch (error) {
       setSettings(previousSettings);
       if (!(await handleAuthenticationError(error))) {
@@ -239,7 +301,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
               aria-current={activeSection === "notifications" ? "page" : undefined}
               onClick={() => setActiveSection("notifications")}
             >
-              알림 정보
+              알림 설정
             </button>
           </nav>
 
@@ -267,7 +329,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
 
                 <div className="settings-field">
                   <label htmlFor="settings-name">이름</label>
-                  <input id="settings-name" type="text" value={sessionUser?.name || ""} disabled />
+                  <input id="settings-name" type="text" value={sessionUser?.name || ""} readOnly />
                   <p className="settings-field-help">이름 변경 기능은 준비 중입니다.</p>
                 </div>
 
@@ -280,7 +342,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
             {!isLoading && !loadError && activeSection === "notifications" && (
               <section aria-labelledby="notification-settings-title">
                 <div className="settings-section-heading">
-                  <h3 id="notification-settings-title">알림 정보</h3>
+                  <h3 id="notification-settings-title">알림 설정</h3>
                   <p>받고 싶은 복지 알림을 선택하세요. 변경 즉시 저장됩니다.</p>
                 </div>
 
@@ -303,6 +365,80 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
                   />
                 </div>
                 {saveError && <p className="settings-save-error" role="alert">{saveError}</p>}
+
+                <div className="settings-subscriptions">
+                  <div className="settings-subscriptions-heading">
+                    <div>
+                      <h4>알림 받는 정책</h4>
+                      <p>개별적으로 마감 알림을 신청한 정책입니다.</p>
+                    </div>
+                    <span>{isSubscriptionsLoading ? "..." : `${subscriptions.length}개`}</span>
+                  </div>
+
+                  <div className="settings-policy-search">
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                      type="search"
+                      value={subscriptionQuery}
+                      placeholder="정책명 또는 서비스 ID 검색"
+                      aria-label="알림 받는 정책 검색"
+                      disabled={isSubscriptionsLoading || Boolean(subscriptionsError)}
+                      onChange={(event) => setSubscriptionQuery(event.target.value)}
+                    />
+                    {subscriptionQuery && (
+                      <button
+                        type="button"
+                        aria-label="검색어 지우기"
+                        onClick={() => setSubscriptionQuery("")}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="settings-policy-list" aria-live="polite">
+                    {isSubscriptionsLoading && (
+                      <div className="settings-policy-load-state">구독 정책을 불러오는 중...</div>
+                    )}
+
+                    {!isSubscriptionsLoading && subscriptionsError && (
+                      <div className="settings-policy-load-state settings-policy-load-state--error" role="alert">
+                        <p>{subscriptionsError}</p>
+                        <button type="button" onClick={handleSubscriptionsRetry}>다시 시도</button>
+                      </div>
+                    )}
+
+                    {!isSubscriptionsLoading && !subscriptionsError && filteredSubscriptions.map((subscription) => (
+                      <article className="settings-policy-item" key={subscription.id}>
+                        <div className="settings-policy-copy">
+                          <div className="settings-policy-title-row">
+                            <h5>{subscription.service_name}</h5>
+                            <span>알림 수신 중</span>
+                          </div>
+                          <p className="settings-policy-id">{subscription.service_id}</p>
+                          <div className="settings-policy-meta">
+                            <span>신청 마감 {formatDate(subscription.application_deadline)}</span>
+                            <span>구독일 {formatDate(subscription.created_at)}</span>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+
+                    {!isSubscriptionsLoading && !subscriptionsError && subscriptions.length === 0 && (
+                      <div className="settings-policy-empty">
+                        <p>아직 개별 알림을 신청한 정책이 없습니다.</p>
+                        <span>채팅에서 관심 정책의 마감 알림을 신청해 보세요.</span>
+                      </div>
+                    )}
+
+                    {!isSubscriptionsLoading && !subscriptionsError && subscriptions.length > 0 && filteredSubscriptions.length === 0 && (
+                      <div className="settings-policy-empty">
+                        <p>검색 결과가 없습니다.</p>
+                        <span>다른 정책명이나 서비스 ID로 검색해 보세요.</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </section>
             )}
 

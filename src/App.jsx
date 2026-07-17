@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate, useParams } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import ManagerPage from "./pages/Manager/ManagerPage"
 import PolicyUploadPage from "./pages/Manager/PolicyUploadPage";
@@ -8,7 +9,7 @@ import "./App.css"
 import Signup from "./pages/Signup/Signup";
 import ChatPage from "./pages/Chat/ChatPage";
 import MainPage from "./pages/Main/MainPage";
-import MyPage from "./pages/MyPage/MyPage";
+// import MyPage from "./pages/MyPage/MyPage";
 import ChatLayout from "./layouts/ChatLayout.jsx";
 import { useAuth } from "./context/useAuth";
 
@@ -21,6 +22,35 @@ function ProtectedRoute({ children }) {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
+function AdminAccessDenied() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.alert("관리자만 접근할 수 있는 페이지입니다.");
+    navigate("/", { replace: true });
+  }, [navigate]);
+
+  return null;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="loading-screen">濡쒕뵫 以?..</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user.role !== "admin") {
+    return <AdminAccessDenied />;
   }
 
   return children;
@@ -70,9 +100,9 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute>
+            <AdminRoute>
               <ManagerPage />
-            </ProtectedRoute>
+            </AdminRoute>
           }
         >
           <Route index element={<Navigate to="/admin/policies" replace />} />

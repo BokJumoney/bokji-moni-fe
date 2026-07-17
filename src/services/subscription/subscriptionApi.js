@@ -2,6 +2,10 @@ import { buildJsonRequest } from "../common/request";
 
 const SETTINGS_PATH = "/api/v1/subscriptions/settings";
 
+export async function getPolicySubscriptions() {
+  return buildJsonRequest("/api/v1/subscriptions", { method: "GET" });
+}
+
 export async function getNotificationSettings() {
   return buildJsonRequest(SETTINGS_PATH, { method: "GET" });
 }
