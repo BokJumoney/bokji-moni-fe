@@ -6,6 +6,13 @@ export async function getPolicySubscriptions() {
   return buildJsonRequest("/api/v1/subscriptions", { method: "GET" });
 }
 
+export async function deletePolicySubscription(serviceId) {
+  return buildJsonRequest(
+    `/api/v1/subscriptions/${encodeURIComponent(serviceId)}`,
+    { method: "DELETE" },
+  );
+}
+
 export async function getNotificationSettings() {
   return buildJsonRequest(SETTINGS_PATH, { method: "GET" });
 }

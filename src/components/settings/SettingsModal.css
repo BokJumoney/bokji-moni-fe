@@ -427,10 +427,18 @@
 }
 
 .settings-policy-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: 16px 18px;
   border: 1px solid #e3e9e4;
   border-radius: 11px;
   background: #fff;
+}
+
+.settings-policy-copy {
+  flex: 1;
+  min-width: 0;
 }
 
 .settings-policy-title-row {
@@ -470,6 +478,39 @@
   gap: 6px 18px;
   margin-top: 11px;
   color: #69716c;
+  font-size: 11px;
+}
+
+.settings-policy-unsubscribe {
+  flex: 0 0 auto;
+  min-width: 74px;
+  padding: 8px 10px;
+  border: 1px solid #d9a3a3;
+  border-radius: 8px;
+  background: #fff;
+  color: #b53c3c;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settings-policy-unsubscribe:hover:not(:disabled),
+.settings-policy-unsubscribe:focus-visible {
+  border-color: #b53c3c;
+  background: #fff6f6;
+  outline: none;
+}
+
+.settings-policy-unsubscribe:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-subscription-action-error {
+  padding: 10px 12px;
+  border: 1px solid #f0caca;
+  border-radius: 8px;
+  background: #fff7f7;
+  color: #c23e3e;
   font-size: 11px;
 }
 
@@ -590,6 +631,15 @@
   .settings-policy-meta {
     flex-direction: column;
     gap: 4px;
+  }
+
+  .settings-policy-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-policy-unsubscribe {
+    align-self: flex-end;
   }
 
   .settings-details-grid {

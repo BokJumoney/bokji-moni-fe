@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { getSession } from "../../services/login/loginApi";
 import {
+  deletePolicySubscription,
   getNotificationSettings,
   getPolicySubscriptions,
   updateNotificationPause,
@@ -89,6 +90,8 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
   const [subscriptionQuery, setSubscriptionQuery] = useState("");
   const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(true);
   const [subscriptionsError, setSubscriptionsError] = useState("");
+  const [subscriptionActionError, setSubscriptionActionError] = useState("");
+  const [deletingSubscriptionId, setDeletingSubscriptionId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [saveError, setSaveError] = useState("");
@@ -160,6 +163,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
   const handleSubscriptionsRetry = () => {
     setIsSubscriptionsLoading(true);
     setSubscriptionsError("");
+    setSubscriptionActionError("");
     loadSubscriptions();
   };
 
@@ -247,6 +251,32 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
       }
     } finally {
       setSavingField(null);
+    }
+  };
+
+  const handleUnsubscribe = async (subscription) => {
+    if (deletingSubscriptionId !== null) return;
+
+    const confirmed = window.confirm(
+      `'${subscription.service_name}' 정책의 마감 알림을 해지할까요?`,
+    );
+    if (!confirmed) return;
+
+    setDeletingSubscriptionId(subscription.service_id);
+    setSubscriptionActionError("");
+    try {
+      await deletePolicySubscription(subscription.service_id);
+      setSubscriptions((current) =>
+        current.filter((item) => item.service_id !== subscription.service_id),
+      );
+    } catch (error) {
+      if (!(await handleAuthenticationError(error))) {
+        setSubscriptionActionError(
+          getErrorMessage(error, "정책 알림을 해지하지 못했습니다."),
+        );
+      }
+    } finally {
+      setDeletingSubscriptionId(null);
     }
   };
 
@@ -397,6 +427,12 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
                   </div>
 
                   <div className="settings-policy-list" aria-live="polite">
+                    {subscriptionActionError && (
+                      <p className="settings-subscription-action-error" role="alert">
+                        {subscriptionActionError}
+                      </p>
+                    )}
+
                     {isSubscriptionsLoading && (
                       <div className="settings-policy-load-state">구독 정책을 불러오는 중...</div>
                     )}
@@ -421,6 +457,16 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
                             <span>구독일 {formatDate(subscription.created_at)}</span>
                           </div>
                         </div>
+                        <button
+                          type="button"
+                          className="settings-policy-unsubscribe"
+                          disabled={deletingSubscriptionId !== null}
+                          onClick={() => handleUnsubscribe(subscription)}
+                        >
+                          {deletingSubscriptionId === subscription.service_id
+                            ? "해지 중..."
+                            : "알림 해지"}
+                        </button>
                       </article>
                     ))}
 
