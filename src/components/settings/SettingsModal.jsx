@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-import { getSession } from "../../services/login/loginApi";
+import {
+  getMyProfile,
+  patchMyProfile,
+} from "../../services/mypage/myPageApi";
 import {
   deletePolicySubscription,
   getNotificationSettings,
@@ -85,7 +88,14 @@ function Toggle({ id, checked, disabled, label, description, onChange }) {
 export default function SettingsModal({ isOpen, initialSection = "account", onClose }) {
   const [activeSection, setActiveSection] = useState(initialSection);
   const [sessionUser, setSessionUser] = useState(null);
+  const [accountName, setAccountName] = useState("");
+  const [isAccountDirty, setIsAccountDirty] = useState(false);
+  const [isAccountSaving, setIsAccountSaving] = useState(false);
+  const [accountSaveError, setAccountSaveError] = useState("");
+  const [accountSaveSuccess, setAccountSaveSuccess] = useState(false);
   const [settings, setSettings] = useState(EMPTY_SETTINGS);
+  const [isNotificationLoading, setIsNotificationLoading] = useState(true);
+  const [notificationLoadError, setNotificationLoadError] = useState("");
   const [subscriptions, setSubscriptions] = useState([]);
   const [subscriptionQuery, setSubscriptionQuery] = useState("");
   const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(true);
@@ -99,7 +109,7 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, login, logout } = useAuth();
 
   const handleAuthenticationError = useCallback(async (error) => {
     const code = getErrorCode(error);
@@ -115,18 +125,31 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
 
   const loadSettings = useCallback(async () => {
     try {
-      const [sessionData, notificationData] = await Promise.all([
-        getSession(),
-        getNotificationSettings(),
-      ]);
-      setSessionUser(sessionData?.user || null);
-      setSettings(normalizeNotificationSettings(notificationData));
+      const profileData = await getMyProfile();
+      setSessionUser(profileData);
+      setAccountName(profileData?.name || "");
+      setIsAccountDirty(false);
     } catch (error) {
       if (!(await handleAuthenticationError(error))) {
         setLoadError(getErrorMessage(error, "설정 정보를 불러오지 못했습니다."));
       }
     } finally {
       setIsLoading(false);
+    }
+  }, [handleAuthenticationError]);
+
+  const loadNotificationSettings = useCallback(async () => {
+    try {
+      const notificationData = await getNotificationSettings();
+      setSettings(normalizeNotificationSettings(notificationData));
+    } catch (error) {
+      if (!(await handleAuthenticationError(error))) {
+        setNotificationLoadError(
+          getErrorMessage(error, "알림 설정을 불러오지 못했습니다."),
+        );
+      }
+    } finally {
+      setIsNotificationLoading(false);
     }
   }, [handleAuthenticationError]);
 
@@ -146,12 +169,14 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
   useEffect(() => {
     if (!isOpen) return;
     const settingsTimer = window.setTimeout(loadSettings, 0);
+    const notificationTimer = window.setTimeout(loadNotificationSettings, 0);
     const subscriptionsTimer = window.setTimeout(loadSubscriptions, 0);
     return () => {
       window.clearTimeout(settingsTimer);
+      window.clearTimeout(notificationTimer);
       window.clearTimeout(subscriptionsTimer);
     };
-  }, [isOpen, loadSettings, loadSubscriptions]);
+  }, [isOpen, loadNotificationSettings, loadSettings, loadSubscriptions]);
 
   const handleRetry = () => {
     setIsLoading(true);
@@ -160,11 +185,56 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
     loadSettings();
   };
 
+  const handleNotificationRetry = () => {
+    setIsNotificationLoading(true);
+    setNotificationLoadError("");
+    setSaveError("");
+    loadNotificationSettings();
+  };
+
   const handleSubscriptionsRetry = () => {
     setIsSubscriptionsLoading(true);
     setSubscriptionsError("");
     setSubscriptionActionError("");
     loadSubscriptions();
+  };
+
+  const handleAccountNameChange = (event) => {
+    const nextName = event.target.value;
+    setAccountName(nextName);
+    setIsAccountDirty(nextName !== (sessionUser?.name || ""));
+    setAccountSaveError("");
+    setAccountSaveSuccess(false);
+  };
+
+  const handleAccountSubmit = async (event) => {
+    event.preventDefault();
+
+    const trimmedName = accountName.trim();
+    if (!trimmedName || trimmedName.length > 100) {
+      setAccountSaveError("이름은 앞뒤 공백을 제외하고 1~100자로 입력해 주세요.");
+      return;
+    }
+    if (!isAccountDirty) return;
+
+    setIsAccountSaving(true);
+    setAccountSaveError("");
+    setAccountSaveSuccess(false);
+
+    try {
+      const profileData = await patchMyProfile({ name: trimmedName });
+      setSessionUser(profileData);
+      setAccountName(profileData?.name || "");
+      setIsAccountDirty(false);
+      setAccountSaveSuccess(true);
+      login({ ...user, ...profileData });
+    } catch (error) {
+      if (!(await handleAuthenticationError(error))) {
+        setAccountSaveError(getErrorMessage(error, "계정 정보를 저장하지 못했습니다."));
+      }
+    } finally {
+      setIsAccountSaving(false);
+    }
   };
 
   useEffect(() => {
@@ -352,20 +422,40 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
                   <p>로그인한 계정의 기본 정보입니다.</p>
                 </div>
 
-                <div className="settings-field">
-                  <label htmlFor="settings-email">이메일</label>
-                  <input id="settings-email" type="email" value={sessionUser?.email || ""} readOnly />
-                </div>
+                <form onSubmit={handleAccountSubmit}>
+                  <div className="settings-field">
+                    <label htmlFor="settings-email">이메일</label>
+                    <input id="settings-email" type="email" value={sessionUser?.email || ""} readOnly />
+                  </div>
 
-                <div className="settings-field">
-                  <label htmlFor="settings-name">이름</label>
-                  <input id="settings-name" type="text" value={sessionUser?.name || ""} readOnly />
-                  <p className="settings-field-help">이름 변경 기능은 준비 중입니다.</p>
-                </div>
+                  <div className="settings-field">
+                    <label htmlFor="settings-name">이름</label>
+                    <input
+                      id="settings-name"
+                      type="text"
+                      value={accountName}
+                      maxLength="100"
+                      disabled={isAccountSaving}
+                      onChange={handleAccountNameChange}
+                    />
+                    <p className="settings-field-help">앞뒤 공백을 제외하고 1~100자로 입력해 주세요.</p>
+                  </div>
 
-                <button type="button" className="settings-account-save" disabled>
-                  변경사항 저장
-                </button>
+                  {accountSaveError && (
+                    <p className="settings-save-error" role="alert">{accountSaveError}</p>
+                  )}
+                  {accountSaveSuccess && (
+                    <p className="settings-save-success" role="status">계정 정보가 저장되었습니다.</p>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="settings-account-save"
+                    disabled={!isAccountDirty || isAccountSaving}
+                  >
+                    {isAccountSaving ? "저장 중..." : "변경사항 저장"}
+                  </button>
+                </form>
               </section>
             )}
 
@@ -376,25 +466,40 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
                   <p>받고 싶은 복지 알림을 선택하세요. 변경 즉시 저장됩니다.</p>
                 </div>
 
-                <div className="settings-toggle-list">
-                  <Toggle
-                    id="policy-news-toggle"
-                    checked={settings.policy_news_enabled}
-                    disabled={settings.is_paused || savingField !== null}
-                    label="새로운 복지 정책 소식 받기"
-                    description={settings.is_paused ? "모든 알림이 일시 중지되어 있습니다." : "새로운 정책과 맞춤 복지 소식을 알려드려요."}
-                    onChange={handlePolicyNewsChange}
-                  />
-                  <Toggle
-                    id="notification-pause-toggle"
-                    checked={settings.is_paused}
-                    disabled={savingField !== null}
-                    label="모든 알림 일시 중지"
-                    description="기존 수신 설정은 유지한 채 모든 알림 발송을 멈춥니다."
-                    onChange={handlePauseChange}
-                  />
-                </div>
-                {saveError && <p className="settings-save-error" role="alert">{saveError}</p>}
+                {isNotificationLoading && (
+                  <div className="settings-policy-load-state">알림 설정을 불러오는 중...</div>
+                )}
+
+                {!isNotificationLoading && notificationLoadError && (
+                  <div className="settings-policy-load-state settings-policy-load-state--error" role="alert">
+                    <p>{notificationLoadError}</p>
+                    <button type="button" onClick={handleNotificationRetry}>다시 시도</button>
+                  </div>
+                )}
+
+                {!isNotificationLoading && !notificationLoadError && (
+                  <>
+                    <div className="settings-toggle-list">
+                      <Toggle
+                        id="policy-news-toggle"
+                        checked={settings.policy_news_enabled}
+                        disabled={settings.is_paused || savingField !== null}
+                        label="새로운 복지 정책 소식 받기"
+                        description={settings.is_paused ? "모든 알림이 일시 중지되어 있습니다." : "새로운 정책과 맞춤 복지 소식을 알려드려요."}
+                        onChange={handlePolicyNewsChange}
+                      />
+                      <Toggle
+                        id="notification-pause-toggle"
+                        checked={settings.is_paused}
+                        disabled={savingField !== null}
+                        label="모든 알림 일시 중지"
+                        description="기존 수신 설정은 유지한 채 모든 알림 발송을 멈춥니다."
+                        onChange={handlePauseChange}
+                      />
+                    </div>
+                    {saveError && <p className="settings-save-error" role="alert">{saveError}</p>}
+                  </>
+                )}
 
                 <div className="settings-subscriptions">
                   <div className="settings-subscriptions-heading">
