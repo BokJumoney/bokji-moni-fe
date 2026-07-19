@@ -2,10 +2,8 @@
   --drawer-width-open: 260px;
   --drawer-width-closed: 40px;
 
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000; /* 페이지 내 다른 요소(메인 헤더 z-index:100 등)보다 항상 위 */
+  position: relative;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   width: var(--drawer-width-open);
@@ -16,13 +14,13 @@
   transition: width 0.25s ease;
 }
 
-/* ── 접힌 상태 ── */
+/* 접힌 상태 */
 .drawer.closed {
   width: var(--drawer-width-closed);
   box-shadow: none;
 }
 
-/* 접히면 텍스트/목록은 숨기고 아이콘만 남긴다 */
+/* 접히면 목록은 숨기고 아이콘만 남긴다. */
 .drawer.closed .drawer-label,
 .drawer.closed .drawer-section-title,
 .drawer.closed .drawer-chatroom,
@@ -30,8 +28,8 @@
   display: none;
 }
 
-/* 접힌 너비(40px)에 맞춰 여백만 줄인다.
-   정렬은 펼침과 동일하게 왼쪽 고정 — 재정렬 없이 여백 transition으로만 미끄러지게 */
+/* 접힌 너비에 맞춰 줄인다.
+   왼쪽 정렬 — 재정렬 없이 여백 transition으로만 조절 */
 .drawer.closed .drawer-header {
   padding: 12px 2px;
 }
@@ -60,7 +58,7 @@
   display: none;
 }
 
-/* ── 상단: 토글 ── */
+/* 헤더 - 토글 버튼 */
 .drawer-header {
   display: flex;
   align-items: center;
@@ -86,7 +84,7 @@
   background: #ECECEE;
 }
 
-/* ── 새 채팅 / 검색 ── */
+/* 새 채팅 / 검색 버튼 */
 .drawer-actions {
   display: flex;
   flex-direction: column;
@@ -150,7 +148,7 @@
   color: var(--text-light);
 }
 
-/* ── 채팅방 목록 ── */
+/* 채팅방 목록 */
 .drawer-chatroom {
   flex: 1;
   overflow-y: auto;
@@ -223,10 +221,9 @@
   background: var(--green-light);
 }
 
-/* ── 하단: 사용자/설정 ── */
+/* 푸터 - 설정 */
 .drawer-footer {
   position: relative;
-  /* 목록이 숨겨진(접힌) 상태에서도 항상 바닥에 붙인다 */
   margin-top: auto;
   padding: 12px;
   border-top: 1px solid #E5E5E7;

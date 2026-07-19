@@ -5,8 +5,7 @@
 
 .chat-area {
   flex: 1;
-  /* 드로어가 fixed로 떠 있으므로, 접힌 드로어 너비만큼만 비워둔다 */
-  margin-left: 40px;
+  min-width: 0;
   overflow-y: auto;
   background: var(--bg-white);
 }
