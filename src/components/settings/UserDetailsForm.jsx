@@ -3,6 +3,7 @@ import {
   getMyWelfareInfo,
   patchMyWelfareInfo,
 } from "../../services/mypage/myPageApi";
+import "./UserDetailsForm.css";
 
 const EMPTY_DETAILS = {
   birth_date: "",
