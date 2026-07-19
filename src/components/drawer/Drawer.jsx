@@ -2,6 +2,7 @@ import './Drawer.css';
 import { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import SettingsModal from "../settings/SettingsModal";
 
 const ToggleIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -31,6 +32,7 @@ function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [settingsModalSection, setSettingsModalSection] = useState(null);
     const footerRef = useRef(null);
     const searchInputRef = useRef(null);
     const navigate = useNavigate();
@@ -64,7 +66,13 @@ function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
         navigate("/login");
     };
 
+    const openSettingsModal = () => {
+        setIsSettingsOpen(false);
+        setSettingsModalSection("account");
+    };
+
     return (
+        <>
         <aside className={isOpen ? "drawer" : "drawer closed"}>
             <header className="drawer-header">
                 <button
@@ -138,8 +146,7 @@ function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
             <footer className="drawer-footer" ref={footerRef}>
                 {isSettingsOpen && (
                     <div className="settings-menu">
-                        <button onClick={() => { setIsSettingsOpen(false); navigate("/mypage"); }}>계정 정보</button>
-                        <button onClick={() => alert("알림 정보는 준비 중이에요.")}>알림 정보</button>
+                        <button onClick={openSettingsModal}>설정</button>
                         <div className="settings-menu-divider" />
                         <button className="logout" onClick={handleLogout}>로그아웃</button>
                     </div>
@@ -158,6 +165,13 @@ function Drawer({ chatRooms, roomsLoading, roomsError, onNewChat, onRetry }) {
                 )}
             </footer>
         </aside>
+        <SettingsModal
+            key={settingsModalSection || "closed"}
+            isOpen={settingsModalSection !== null}
+            initialSection={settingsModalSection || "account"}
+            onClose={() => setSettingsModalSection(null)}
+        />
+        </>
     )
 }
 
