@@ -58,6 +58,7 @@
     font-size: 15px;
     font-weight: 600;
     color: #333;
+    margin-right: 10px;
 }
 
 .header__admin-badge {
@@ -67,6 +68,24 @@
     background-color: #22A45D;
     border-radius: 4px;
     padding: 3px 8px;
+}
+
+/* 관리자 페이지 버튼 */
+.admin-btn {
+    background-color: #22A45D;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-btn:hover {
+    background-color: #1B8A4C;
+    box-shadow: 0 4px 12px rgba(34, 164, 93, 0.3);
 }
 
 /* 로그아웃, 마이페이지 버튼 */
