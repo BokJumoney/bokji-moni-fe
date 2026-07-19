@@ -540,6 +540,22 @@
   gap: 0 16px;
 }
 
+.settings-details-form,
+.settings-details-grid > .settings-field {
+  min-width: 0;
+}
+
+.settings-details-form {
+  width: 100%;
+}
+
+.settings-details-grid input,
+.settings-details-grid select {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .settings-details-actions {
   display: flex;
   align-items: center;
