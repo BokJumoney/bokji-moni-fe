@@ -23,10 +23,3 @@ export async function updatePolicyNews(enabled) {
     body: { enabled },
   });
 }
-
-export async function updateNotificationPause(paused) {
-  return buildJsonRequest(`${SETTINGS_PATH}/pause`, {
-    method: "PUT",
-    body: { paused },
-  });
-}
