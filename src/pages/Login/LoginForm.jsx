@@ -13,7 +13,8 @@ export default function LoginForm() {
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setErrorMsg("");
 
         if (!email || !password) {
@@ -33,8 +34,10 @@ export default function LoginForm() {
         }
     };
 
+
+
     return (
-        <div className="login-form">
+        <form className="login-form">
             <h1>로그인</h1>
             <p className="subscript">회원 계정으로 로그인하세요.</p>
             <p className="input-title">이메일</p>
@@ -55,6 +58,7 @@ export default function LoginForm() {
             {errorMsg && <p className="error-message">{errorMsg}</p>}
 
             <Button
+                btnType="submit"
                 value={loading ? "로그인 중..." : "로그인"}
                 onClick={handleSubmit}
             />
@@ -64,6 +68,6 @@ export default function LoginForm() {
                     <p className="subscript">비밀번호를 잊으셨나요?</p>
                 </div>
             </div>
-        </div>
+        </form>
     )
 }
