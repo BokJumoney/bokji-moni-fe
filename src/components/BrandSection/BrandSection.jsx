@@ -1,4 +1,3 @@
-import React from 'react'
 import moniLogo from "../../assets/moni_logo_login.png"
 import "./BrandSection.css";
 import maintitle from "../../assets/title.png"
