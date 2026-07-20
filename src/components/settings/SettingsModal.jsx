@@ -9,7 +9,6 @@ import {
   deletePolicySubscription,
   getNotificationSettings,
   getPolicySubscriptions,
-  updateNotificationPause,
   updatePolicyNews,
 } from "../../services/subscription/subscriptionApi";
 import UserDetailsForm from "./UserDetailsForm";
@@ -17,7 +16,6 @@ import "./SettingsModal.css";
 
 const EMPTY_SETTINGS = {
   policy_news_enabled: false,
-  is_paused: false,
   updated_at: "",
 };
 
@@ -28,7 +26,6 @@ function normalizeNotificationSettings(data = {}) {
 
   return {
     policy_news_enabled: toBoolean(source.policy_news_enabled),
-    is_paused: toBoolean(source.is_paused),
     updated_at: source.updated_at || "",
   };
 }
@@ -305,25 +302,6 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
     }
   };
 
-  const handlePauseChange = async (paused) => {
-    const previousSettings = settings;
-    setSettings((current) => ({ ...current, is_paused: paused }));
-    setSavingField("pause");
-    setSaveError("");
-
-    try {
-      const data = await updateNotificationPause(paused);
-      setSettings(normalizeNotificationSettings(data));
-    } catch (error) {
-      setSettings(previousSettings);
-      if (!(await handleAuthenticationError(error))) {
-        setSaveError(getErrorMessage(error, "알림 일시 중지 설정을 저장하지 못했습니다."));
-      }
-    } finally {
-      setSavingField(null);
-    }
-  };
-
   const handleUnsubscribe = async (subscription) => {
     if (deletingSubscriptionId !== null) return;
 
@@ -483,18 +461,10 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
                       <Toggle
                         id="policy-news-toggle"
                         checked={settings.policy_news_enabled}
-                        disabled={settings.is_paused || savingField !== null}
-                        label="새로운 복지 정책 소식 받기"
-                        description={settings.is_paused ? "모든 알림이 일시 중지되어 있습니다." : "새로운 정책과 맞춤 복지 소식을 알려드려요."}
-                        onChange={handlePolicyNewsChange}
-                      />
-                      <Toggle
-                        id="notification-pause-toggle"
-                        checked={settings.is_paused}
                         disabled={savingField !== null}
-                        label="모든 알림 일시 중지"
-                        description="기존 수신 설정은 유지한 채 모든 알림 발송을 멈춥니다."
-                        onChange={handlePauseChange}
+                        label="새로운 복지 정책 소식 받기"
+                        description={settings.policy_news_enabled ? "새로운 정책과 맞춤 복지 소식을 알려드려요." : "모든 알림이 중지되어 있습니다."}
+                        onChange={handlePolicyNewsChange}
                       />
                     </div>
                     {saveError && <p className="settings-save-error" role="alert">{saveError}</p>}
