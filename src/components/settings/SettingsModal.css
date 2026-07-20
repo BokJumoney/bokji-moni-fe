@@ -534,29 +534,29 @@
   font-size: 11px;
 }
 
-.settings-details-grid {
+.settings-background-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 16px;
 }
 
-.settings-details-form,
-.settings-details-grid > .settings-field {
+.settings-background-form,
+.settings-background-grid > .settings-field {
   min-width: 0;
 }
 
-.settings-details-form {
+.settings-background-form {
   width: 100%;
 }
 
-.settings-details-grid input,
-.settings-details-grid select {
+.settings-background-grid input,
+.settings-background-grid select {
   box-sizing: border-box;
   min-width: 0;
   max-width: 100%;
 }
 
-.settings-details-actions {
+.settings-background-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -564,7 +564,7 @@
   padding-top: 4px;
 }
 
-.settings-details-actions button {
+.settings-background-actions button {
   flex: 0 0 auto;
   min-width: 126px;
   height: 42px;
@@ -576,7 +576,7 @@
   font-weight: 600;
 }
 
-.settings-details-actions button:disabled {
+.settings-background-actions button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
@@ -658,16 +658,16 @@
     align-self: flex-end;
   }
 
-  .settings-details-grid {
+  .settings-background-grid {
     grid-template-columns: 1fr;
   }
 
-  .settings-details-actions {
+  .settings-background-actions {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .settings-details-actions button {
+  .settings-background-actions button {
     width: 100%;
   }
 }

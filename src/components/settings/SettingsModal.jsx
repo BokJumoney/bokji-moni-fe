@@ -11,7 +11,7 @@ import {
   getPolicySubscriptions,
   updatePolicyNews,
 } from "../../services/subscription/subscriptionApi";
-import UserDetailsForm from "./UserDetailsForm";
+import UserBackgroundForm from "./UserBackgroundForm";
 import "./SettingsModal.css";
 
 const EMPTY_SETTINGS = {
@@ -367,11 +367,11 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
             </button>
             <button
               type="button"
-              className={activeSection === "details" ? "active" : ""}
-              aria-current={activeSection === "details" ? "page" : undefined}
-              onClick={() => setActiveSection("details")}
+              className={activeSection === "background" ? "active" : ""}
+              aria-current={activeSection === "background" ? "page" : undefined}
+              onClick={() => setActiveSection("background")}
             >
-              사용자 상세 정보
+              사용자 배경 정보
             </button>
             <button
               type="button"
@@ -563,8 +563,8 @@ export default function SettingsModal({ isOpen, initialSection = "account", onCl
               </section>
             )}
 
-            {!isLoading && !loadError && activeSection === "details" && (
-              <UserDetailsForm onAuthenticationError={handleAuthenticationError} />
+            {!isLoading && !loadError && activeSection === "background" && (
+              <UserBackgroundForm onAuthenticationError={handleAuthenticationError} />
             )}
           </main>
         </div>
