@@ -1,14 +1,26 @@
 import { request } from "../services/common/request";
 
-export const uploadAdminFile = async (file, metadata = {}) => {
+export const getAdminPolicies = async () => {
+  return request("/admin/policies");
+};
+
+export const uploadAdminFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  Object.entries(metadata).forEach(([key, value]) => {
-    if (value) formData.append(key, value);
-  });
-
   return request("/admin/file", {
+    method: "POST",
+    body: formData,
+    headers: {},
+  });
+};
+
+export const uploadAdminForm = async (file, serviceId) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("service_id", serviceId);
+
+  return request("/admin/form", {
     method: "POST",
     body: formData,
     headers: {},

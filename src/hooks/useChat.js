@@ -22,7 +22,7 @@ export default function useChat({ sessionId = null, initialMessages = null, pend
       .then((data) => {
         if (cancelled) return;
         const items = Array.isArray(data?.items) ? data.items : [];
-        setMessages(items.map((m) => createMessage(m.role, m.content)));
+        setMessages(items.map((m) => createMessage(m.role, m.content, [], m.files)));
         setHistoryLoading(false);
       })
       .catch((err) => {
@@ -49,6 +49,7 @@ export default function useChat({ sessionId = null, initialMessages = null, pend
             title: s.title || '',
             description: s.description || '',
           })) : [],
+          data.files,
         );
         setMessages((prev) => [...prev, assistantMsg]);
         if (data.session_id) {
@@ -99,6 +100,7 @@ export default function useChat({ sessionId = null, initialMessages = null, pend
           title: s.title || '',
           description: s.description || '',
         })) : [],
+        data.files,
       );
 
       setMessages((prev) => [...prev, assistantMsg]);

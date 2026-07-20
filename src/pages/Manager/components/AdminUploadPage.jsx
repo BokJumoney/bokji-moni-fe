@@ -1,22 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import upload from "../../../assets/upload.png";
-import { deleteAdminFile, uploadAdminFile } from "../../../api/adminFiles.js";
+import {
+  deleteAdminFile,
+  getAdminPolicies,
+  uploadAdminFile,
+  uploadAdminForm,
+} from "../../../api/adminFiles.js";
 import { formatUploadedAt } from "../../../utils/dateutils.js";
 import { formatFileSize, getExtension, getFileMeta } from "../../../utils/fileutils.js";
 import UploadFileList from "./UploadFileList";
 
-const POLICY_STORAGE_KEY = "bokjumoni-admin-policies";
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
-
-const readStoredPolicies = () => {
-  try {
-    return JSON.parse(localStorage.getItem(POLICY_STORAGE_KEY) ?? "[]");
-  } catch {
-    return [];
-  }
-};
-
-const getPolicyName = (filename) => filename.replace(/\.pdf$/i, "");
 
 const AdminUploadPage = ({
   pageType,
@@ -37,13 +31,40 @@ const AdminUploadPage = ({
   const [selectedPolicyId, setSelectedPolicyId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [policies, setPolicies] = useState(readStoredPolicies);
+  const [policies, setPolicies] = useState([]);
+  const [isPoliciesLoading, setIsPoliciesLoading] = useState(requiresPolicy);
+  const [policyError, setPolicyError] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
 
   const hasSelectedFiles = selectedFiles.length > 0;
-  const selectedPolicy = policies.find((policy) => policy.id === selectedPolicyId);
+  const selectedPolicy = policies.find(
+    (policy) => String(policy.policy_id) === selectedPolicyId,
+  );
   const canUpload = hasSelectedFiles && (!requiresPolicy || Boolean(selectedPolicy));
+
+  useEffect(() => {
+    if (!requiresPolicy) return undefined;
+
+    let isActive = true;
+
+    getAdminPolicies()
+      .then((data) => {
+        if (isActive) setPolicies(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        if (!isActive) return;
+        setPolicies([]);
+        setPolicyError(error.message || "정책 목록을 불러오지 못했습니다.");
+      })
+      .finally(() => {
+        if (isActive) setIsPoliciesLoading(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [requiresPolicy]);
 
   const applySelectedFiles = (files) => {
     const file = Array.from(files ?? [])[0];
@@ -91,11 +112,9 @@ const AdminUploadPage = ({
     const file = selectedFiles[0];
 
     try {
-      const uploadedFile = await uploadAdminFile(file, {
-        fileCategory: requiresPolicy ? "application" : "policy",
-        policyId: selectedPolicy?.id,
-        policyName: selectedPolicy?.name,
-      });
+      const uploadedFile = requiresPolicy
+        ? await uploadAdminForm(file, selectedPolicy.policy_id)
+        : await uploadAdminFile(file);
       const newRow = {
         id: uploadedFile.fileId,
         name: uploadedFile.originalFilename,
@@ -107,18 +126,6 @@ const AdminUploadPage = ({
       };
 
       setUploadedFiles((current) => [newRow, ...current]);
-
-      if (!requiresPolicy) {
-        const newPolicy = {
-          id: uploadedFile.fileId,
-          name: getPolicyName(uploadedFile.originalFilename),
-        };
-        setPolicies((current) => {
-          const next = [newPolicy, ...current.filter((policy) => policy.id !== newPolicy.id)];
-          localStorage.setItem(POLICY_STORAGE_KEY, JSON.stringify(next));
-          return next;
-        });
-      }
 
       setSelectedFiles([]);
       setSelectedPolicyId("");
@@ -134,14 +141,6 @@ const AdminUploadPage = ({
   const handleDeleteFile = async (fileId) => {
     await deleteAdminFile(fileId);
     setUploadedFiles((current) => current.filter((file) => file.id !== fileId));
-
-    if (!requiresPolicy) {
-      setPolicies((current) => {
-        const next = current.filter((policy) => policy.id !== fileId);
-        localStorage.setItem(POLICY_STORAGE_KEY, JSON.stringify(next));
-        return next;
-      });
-    }
   };
 
   return (
@@ -172,16 +171,21 @@ const AdminUploadPage = ({
                 id="policy-select"
                 value={selectedPolicyId}
                 onChange={(event) => setSelectedPolicyId(event.target.value)}
+                disabled={isPoliciesLoading}
               >
-                <option value="">복지 정책을 선택하세요</option>
+                <option value="">
+                  {isPoliciesLoading ? "정책 목록 불러오는 중..." : "복지 정책을 선택하세요"}
+                </option>
                 {policies.map((policy) => (
-                  <option key={policy.id} value={policy.id}>{policy.name}</option>
+                  <option key={policy.policy_id} value={policy.policy_id}>{policy.name}</option>
                 ))}
               </select>
               <span className="field-hint">
-                {policies.length > 0
-                  ? "업로드할 신청서가 속한 정책을 선택해 주세요."
-                  : "먼저 ‘복지 정책 업로드하기’에서 정책 PDF를 등록해 주세요."}
+                {policyError
+                  ? policyError
+                  : policies.length > 0
+                    ? "업로드할 신청서가 속한 정책을 선택해 주세요."
+                    : !isPoliciesLoading && "등록된 복지 정책이 없습니다."}
               </span>
             </div>
           )}

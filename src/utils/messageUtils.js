@@ -12,7 +12,7 @@ export function formatTime(date) {
 
 let _counter = 0;
 
-export function createMessage(role, content, sources = []) {
+export function createMessage(role, content, sources = [], files = []) {
   _counter += 1;
   return {
     id: `${role}-${Date.now()}-${_counter}`,
@@ -20,5 +20,6 @@ export function createMessage(role, content, sources = []) {
     content,
     timestamp: new Date(),
     sources,
+    files: Array.isArray(files) ? files : [],
   };
 }
