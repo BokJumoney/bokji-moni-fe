@@ -1,7 +1,15 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const ABSOLUTE_URL_PATTERN = /^https?:\/\//i;
+
+export function resolveApiUrl(path) {
+  if (!path) return '';
+  if (ABSOLUTE_URL_PATTERN.test(path)) return path;
+
+  return `${BASE_URL.replace(/\/$/, '')}/${String(path).replace(/^\//, '')}`;
+}
 
 export async function request(path, options = {}) {
-  const url = `${BASE_URL}${path}`;
+  const url = resolveApiUrl(path);
   const isFormData = options.body instanceof FormData;
 
   const response = await fetch(url, {
