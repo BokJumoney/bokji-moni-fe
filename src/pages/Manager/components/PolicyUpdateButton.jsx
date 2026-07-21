@@ -8,7 +8,6 @@ const PolicyUpdateButton = () => {
         setIsUpdating(true);
         try {
             await policyUpdate();
-            alert("정책 업데이트가 완료되었습니다.");
         } catch (error) {
             alert(error.message);
         } finally {

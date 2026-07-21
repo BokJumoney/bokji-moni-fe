@@ -35,5 +35,5 @@ export const deleteAdminFile = async (fileId) => {
 };
 
 export const policyUpdate = () => {
-    request("/admin/api_call");
+    return request("/admin/api_call");
 }
